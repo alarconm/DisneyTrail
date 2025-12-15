@@ -1,11 +1,15 @@
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
-const Database = require('@replit/database');
+import express from 'express';
+import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import Database from '@replit/database';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const db = new Database();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
