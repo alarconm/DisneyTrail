@@ -84,16 +84,16 @@ export default function MainMenu() {
       <div className="relative text-center mb-6 md:mb-8">
         <div className="inline-block">
           <h1
-            className={`text-xl md:text-3xl text-magic-gold mb-1 transition-all duration-1000 ${
-              titleGlow ? 'drop-shadow-[0_0_15px_rgba(255,215,0,0.8)]' : ''
+            className={`text-xl md:text-2xl text-magic-gold mb-1 transition-all duration-1000 ${
+              titleGlow ? 'drop-shadow-[0_0_8px_rgba(255,215,0,0.5)]' : ''
             }`}
           >
             Kristin's
           </h1>
-          <h2 className="text-2xl md:text-4xl text-white font-bold tracking-wider drop-shadow-lg">
+          <h2 className="text-2xl md:text-3xl text-white font-bold tracking-wider">
             MAGICAL
           </h2>
-          <h2 className="text-xl md:text-3xl text-elsa-blue mt-1 drop-shadow-[0_0_10px_rgba(165,243,252,0.5)]">
+          <h2 className="text-xl md:text-2xl text-elsa-blue mt-1">
             DISNEY TRAIL
           </h2>
         </div>
@@ -195,29 +195,13 @@ export default function MainMenu() {
         </div>
       </div>
 
-      {/* Christmas lights decoration */}
-      <div className="flex justify-center gap-2 my-4 relative z-10">
-        {['🔴', '🟡', '🟢', '🔵', '🟣', '🔴', '🟡', '🟢'].map((light, i) => (
-          <span
-            key={i}
-            className="text-sm animate-pulse"
-            style={{ animationDelay: `${i * 0.2}s` }}
-          >
-            {light}
-          </span>
-        ))}
-      </div>
-
       {/* Footer with love */}
       <div className="text-center mt-4 md:mt-6 relative z-10">
-        <div className="inline-block px-4 py-2 bg-gradient-to-r from-red-900/30 via-green-900/30 to-red-900/30 rounded-full border border-red-500/20">
+        <div className="inline-block px-4 py-2 bg-gradient-to-r from-magic-gold/20 via-pink-500/20 to-magic-gold/20 rounded-full border border-magic-gold/30">
           <p className="text-xs text-white/70">
-            🎄 A Christmas gift from Mike 💕 🎄
+            Made with 💕 by Mike
           </p>
         </div>
-        <p className="text-[10px] text-white/30 mt-2">
-          Merry Christmas 2025, Kristin!
-        </p>
       </div>
 
       {/* Corner decorations */}
@@ -226,18 +210,6 @@ export default function MainMenu() {
       </div>
       <div className="absolute bottom-2 right-2 md:bottom-4 md:right-4 text-xl md:text-2xl opacity-40 animate-pulse" style={{ animationDelay: '1s' }}>
         🏰
-      </div>
-      <div className="absolute top-2 left-2 md:top-4 md:left-4 text-lg opacity-50">
-        🎄
-      </div>
-      <div className="absolute top-2 right-2 md:top-4 md:right-4 text-lg opacity-50">
-        🎁
-      </div>
-      <div className="absolute top-12 left-2 md:top-16 md:left-4 text-sm opacity-30 animate-bounce" style={{ animationDuration: '3s' }}>
-        ❄️
-      </div>
-      <div className="absolute top-20 right-4 md:top-24 md:right-6 text-sm opacity-30 animate-bounce" style={{ animationDuration: '4s', animationDelay: '1s' }}>
-        ❄️
       </div>
     </div>
   );

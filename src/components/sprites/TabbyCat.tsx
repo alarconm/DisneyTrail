@@ -8,31 +8,31 @@ interface TabbyCatProps {
   className?: string;
 }
 
-// Color palettes for each cat - brown, black, and white tabbies
+// Color palettes for each cat - gray tabbies based on the real cats!
 const CAT_COLORS = {
   marge: {
-    primary: '#4A3728', // Dark brown
-    secondary: '#8B7355', // Light brown
-    stripes: '#2C1810', // Nearly black stripes
-    belly: '#F5F0E6', // Cream white
-    nose: '#FFB6C1', // Pink
-    eyes: '#4CAF50', // Green eyes
+    primary: '#6B6B6B', // Gray
+    secondary: '#8A8A8A', // Lighter gray
+    stripes: '#3D3D3D', // Dark gray stripes
+    belly: '#FFFFFF', // White chest patch
+    nose: '#FFB6C1', // Pink nose
+    eyes: '#9ACD32', // Yellow-green eyes
   },
   minestrone: {
-    primary: '#1C1C1C', // Black
-    secondary: '#3D3D3D', // Dark gray
-    stripes: '#000000', // Pure black stripes
-    belly: '#FFFFFF', // White
-    nose: '#2C2C2C', // Dark nose
-    eyes: '#FFD700', // Golden eyes
+    primary: '#5A5A5A', // Slightly darker gray
+    secondary: '#7A7A7A', // Medium gray
+    stripes: '#2D2D2D', // Dark stripes
+    belly: '#FFFFFF', // White chest
+    nose: '#FFB6C1', // Pink nose
+    eyes: '#9ACD32', // Yellow-green eyes
   },
   mac: {
-    primary: '#F5F5F5', // White
-    secondary: '#E0E0E0', // Light gray
-    stripes: '#A0A0A0', // Gray stripes
-    belly: '#FFFFFF', // Pure white
-    nose: '#FFB6C1', // Pink
-    eyes: '#87CEEB', // Blue eyes
+    primary: '#787878', // Gray (slightly lighter)
+    secondary: '#959595', // Light gray
+    stripes: '#454545', // Dark gray stripes
+    belly: '#FFFFFF', // White chest
+    nose: '#FFB6C1', // Pink nose
+    eyes: '#9ACD32', // Yellow-green eyes
   },
 };
 

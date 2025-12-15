@@ -118,7 +118,7 @@ export default function VictoryScreen() {
             </p>
 
             <p className="text-pink-400 text-lg mb-4">
-              Merry Christmas, my love. 💕
+              I love you. 💕
             </p>
 
             <p className="text-white text-sm italic">
@@ -156,8 +156,6 @@ export default function VictoryScreen() {
       {/* Credits */}
       <p className="text-center text-xs text-white/30 mt-4">
         Made with 💕 for Kristin
-        <br />
-        Christmas 2025
       </p>
     </div>
   );
