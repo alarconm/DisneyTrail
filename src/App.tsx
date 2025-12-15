@@ -5,10 +5,14 @@ import ShopScreen from './components/UI/ShopScreen';
 import TravelScreen from './components/UI/TravelScreen';
 import EventScreen from './components/UI/EventScreen';
 import LandmarkScreen from './components/UI/LandmarkScreen';
-import HuntingMiniGame from './components/UI/HuntingMiniGame';
+import ForagingMiniGame from './components/UI/ForagingMiniGame';
+import CookingMiniGame from './components/UI/CookingMiniGame';
+import DancingMiniGame from './components/UI/DancingMiniGame';
+import TheaterMiniGame from './components/UI/TheaterMiniGame';
 import RiverCrossing from './components/UI/RiverCrossing';
 import VictoryScreen from './components/UI/VictoryScreen';
 import GameOverScreen from './components/UI/GameOverScreen';
+import AchievementsScreen from './components/UI/AchievementsScreen';
 
 function App() {
   const { currentScreen, googlyEyesMode } = useGameStore();
@@ -28,13 +32,21 @@ function App() {
       case 'landmark':
         return <LandmarkScreen />;
       case 'hunting':
-        return <HuntingMiniGame />;
+        return <ForagingMiniGame />;
+      case 'cooking':
+        return <CookingMiniGame />;
+      case 'dancing':
+        return <DancingMiniGame />;
+      case 'theater':
+        return <TheaterMiniGame />;
       case 'river-crossing':
         return <RiverCrossing />;
       case 'victory':
         return <VictoryScreen />;
       case 'game-over':
         return <GameOverScreen />;
+      case 'achievements':
+        return <AchievementsScreen />;
       default:
         return <MainMenu />;
     }

@@ -4,8 +4,7 @@ export const GOOD_EVENTS: GameEvent[] = [
   {
     id: 'tinkerbell-pixiedust',
     title: 'Tinker Bell Appears!',
-    description:
-      'A tiny glow appears beside the wagon. Tinker Bell sprinkles her magical pixie dust over your party!',
+    description: 'A tiny glow appears beside the wagon. Tinker Bell sprinkles her magical pixie dust over your party! Everything feels more magical.',
     type: 'good',
     effects: [{ type: 'resource', resource: 'pixieDust', amount: 20 }],
     disneyCharacter: 'tinkerbell',
@@ -13,32 +12,28 @@ export const GOOD_EVENTS: GameEvent[] = [
   {
     id: 'minestrone-mouse',
     title: 'Successful Hunt!',
-    description:
-      'Minestrone has caught a mouse! She looks incredibly proud of herself. Marge pretends not to be impressed.',
+    description: 'Minestrone has caught a mouse! She looks incredibly proud of herself and presents it like a trophy. Marge pretends not to be impressed.',
     type: 'good',
     effects: [{ type: 'resource', resource: 'food', amount: 10 }],
   },
   {
     id: 'mtg-booster',
     title: 'Rare Find!',
-    description:
-      'You find an abandoned Magic: The Gathering booster pack by the trail! Mike would be thrilled. Maybe there\'s a Black Lotus in there?',
+    description: 'You find an abandoned Magic: The Gathering booster pack by the trail! Mike would be SO thrilled. Maybe there\'s a Black Lotus in there?',
     type: 'good',
-    effects: [{ type: 'resource', resource: 'goldCoins', amount: 25 }],
+    effects: [{ type: 'resource', resource: 'goldCoins', amount: 30 }],
   },
   {
     id: 'theater-troupe',
     title: 'Theater Troupe!',
-    description:
-      "A traveling theater troupe invites you to perform! Kristin's Teaching Artist skills shine. Everyone is impressed!",
+    description: 'A traveling theater troupe invites you to perform! Kristin\'s Teaching Artist skills from NW Children\'s Theater shine brightly. Standing ovation!',
     type: 'good',
     effects: [{ type: 'morale', amount: 30 }],
   },
   {
     id: 'mac-warmth',
     title: "Mac's Cozy Night",
-    description:
-      "It's a cold night, but Mac's big fluffy body keeps everyone warm. He purrs so loud it sounds like a small engine.",
+    description: "It's a cold night, but Mac's big fluffy body keeps everyone warm. He purrs so loud it sounds like a small engine. Best space heater ever.",
     type: 'good',
     effects: [
       { type: 'health', target: 'all', amount: 5 },
@@ -48,24 +43,21 @@ export const GOOD_EVENTS: GameEvent[] = [
   {
     id: 'wild-cat-treats',
     title: 'Treat Discovery!',
-    description:
-      'Minestrone has discovered a hidden stash of premium cat treats behind a cactus! Marge sighs. Mac drools.',
+    description: 'Minestrone has discovered a hidden stash of premium cat treats behind a cactus! How did those get there? Marge sighs. Mac drools.',
     type: 'good',
     effects: [{ type: 'resource', resource: 'catTreats', amount: 15 }],
   },
   {
     id: 'dance-morale',
     title: 'Dance Break!',
-    description:
-      'Kristin teaches the cats a jazz routine. Minestrone nails it. Mac trips but looks adorable. Marge judges from the sidelines.',
+    description: 'Kristin teaches the cats a jazz routine from her contemporary dance days. Minestrone nails it. Mac trips but looks adorable. Marge judges from the sidelines.',
     type: 'good',
     effects: [{ type: 'morale', amount: 25 }],
   },
   {
     id: 'friendly-travelers',
     title: 'Friendly Travelers',
-    description:
-      'You meet fellow travelers who share their supplies! They heard about NW Children\'s Theater and wanted to help.',
+    description: 'You meet fellow travelers who share their supplies! They heard about NW Children\'s Theater and wanted to support the arts.',
     type: 'good',
     effects: [
       { type: 'resource', resource: 'food', amount: 30 },
@@ -75,18 +67,75 @@ export const GOOD_EVENTS: GameEvent[] = [
   {
     id: 'perfect-weather',
     title: 'Beautiful Day!',
-    description:
-      'The weather is absolutely perfect. Blue skies, gentle breeze, and not too hot. Even Marge seems pleased.',
+    description: 'The weather is absolutely perfect. Blue skies, gentle breeze, and not too hot. Even Marge seems pleased. Mac found a sunny spot.',
     type: 'good',
     effects: [{ type: 'morale', amount: 15 }],
   },
   {
     id: 'oregon-duck-blessing',
     title: 'Duck Blessing',
-    description:
-      'An Oregon Duck waddles by and gives you an approving nod. Go Ducks! A fellow alum brings good luck.',
+    description: 'An Oregon Duck waddles by and gives you an approving nod. Go Ducks! As a fellow U of O alum, Kristin feels energized!',
     type: 'good',
     effects: [{ type: 'morale', amount: 20 }],
+  },
+  {
+    id: 'hip-hop-practice',
+    title: 'Hip Hop Session',
+    description: 'Kristin finds the perfect spot for some hip-hop practice! Her moves from Clackamas High School days come flooding back. The cats are confused but supportive.',
+    type: 'good',
+    effects: [{ type: 'morale', amount: 20 }, { type: 'health', target: 'all', amount: 5 }],
+  },
+  {
+    id: 'marge-wisdom',
+    title: 'Marge\'s Wisdom',
+    description: 'Marge gives everyone a knowing look that somehow solves all your problems. Mom energy is powerful. Party feels organized and ready.',
+    type: 'good',
+    effects: [{ type: 'morale', amount: 15 }],
+  },
+  {
+    id: 'lucky-penny',
+    title: 'Lucky Find!',
+    description: 'You find a shiny penny on the trail! "See a penny, pick it up..." The cats think you\'re weird for collecting tiny metal discs.',
+    type: 'good',
+    effects: [{ type: 'resource', resource: 'goldCoins', amount: 10 }],
+  },
+  {
+    id: 'concordia-memory',
+    title: 'Educational Inspiration',
+    description: 'Kristin remembers a valuable lesson from her MA at Concordia University-Portland. Applied knowledge makes the journey easier!',
+    type: 'good',
+    effects: [{ type: 'morale', amount: 15 }],
+  },
+  {
+    id: 'extra-wheel',
+    title: 'Roadside Discovery',
+    description: 'You find an abandoned wagon wheel in excellent condition! Someone\'s loss is your gain. Mac tries to roll it. It does not go well.',
+    type: 'good',
+    effects: [{ type: 'resource', resource: 'wagonWheels', amount: 1 }],
+  },
+  {
+    id: 'remy-visit',
+    title: 'A Little Chef!',
+    description: 'A tiny rat with a chef\'s hat appears and reorganizes your food supplies! Everything is suddenly more appetizing. Anyone can cook!',
+    type: 'good',
+    effects: [{ type: 'resource', resource: 'food', amount: 20 }],
+    disneyCharacter: 'remy',
+  },
+  {
+    id: 'pascal-camouflage',
+    title: 'Pascal\'s Help',
+    description: 'A small chameleon changes colors to match your wagon! Pascal is helping you blend in. Minestrone is fascinated and tries to catch him.',
+    type: 'good',
+    effects: [{ type: 'morale', amount: 10 }],
+    disneyCharacter: 'pascal',
+  },
+  {
+    id: 'maximus-guard',
+    title: 'Royal Guard',
+    description: 'Maximus the horse trots alongside your wagon for protection! He keeps giving Mac suspicious looks though.',
+    type: 'good',
+    effects: [{ type: 'morale', amount: 25 }],
+    disneyCharacter: 'maximus',
   },
 ];
 
@@ -94,24 +143,21 @@ export const BAD_EVENTS: GameEvent[] = [
   {
     id: 'minestrone-food-raid',
     title: 'Minestrone Strikes Again!',
-    description:
-      'Minestrone got into the food supplies again! She has no regrets. Those guilty eyes say otherwise.',
+    description: 'Minestrone got into the food supplies again! She has zero regrets. Those "guilty" eyes say otherwise. Classic troublemaker behavior.',
     type: 'bad',
     effects: [{ type: 'resource', resource: 'food', amount: -30 }],
   },
   {
     id: 'mac-wheel',
     title: 'Mac vs. Wagon',
-    description:
-      "Mac accidentally sat on a wagon wheel. Mac is fine. The wheel... less so. He's very sorry (he's not).",
+    description: 'Mac accidentally sat on a wagon wheel. Mac is fine and unbothered. The wheel... significantly less so. He\'s very sorry (he is not).',
     type: 'bad',
     effects: [{ type: 'resource', resource: 'wagonWheels', amount: -1 }],
   },
   {
     id: 'stitch-chaos',
     title: 'Stitch Chaos!',
-    description:
-      'STITCH APPEARED AND CAUSED CHAOS! He grabbed something and ran off cackling. "Blue punch buggy! No punch back!"',
+    description: 'STITCH APPEARED AND CAUSED ABSOLUTE CHAOS! He grabbed something and ran off cackling. "Blue punch buggy! No punch back!"',
     type: 'bad',
     effects: [{ type: 'resource', resource: 'catTreats', amount: -10 }],
     disneyCharacter: 'stitch',
@@ -119,58 +165,86 @@ export const BAD_EVENTS: GameEvent[] = [
   {
     id: 'marge-hairball',
     title: 'Hairball Delay',
-    description:
-      'Marge has a hairball. A DRAMATIC hairball. She insists on privacy. Travel is delayed.',
+    description: 'Marge has a hairball. A DRAMATIC hairball. She insists on privacy and dignity during this trying time. Travel is delayed.',
     type: 'bad',
     effects: [{ type: 'time', amount: 1 }],
   },
   {
     id: 'traffic-jam',
     title: 'Modern Problems',
-    description:
-      'You have encountered... a traffic jam on I-40. Some things never change. Lose 2 days sitting in traffic.',
+    description: 'You have encountered... a traffic jam on I-40. In a wagon. In fantasy Oregon Trail. Some things transcend time and space.',
     type: 'bad',
     effects: [{ type: 'time', amount: 2 }],
   },
   {
     id: 'pothole',
     title: 'Road Hazard!',
-    description:
-      'The wagon hits a massive pothole! Everything rattles. Mac thinks it was an earthquake. Marge is unamused.',
+    description: 'The wagon hits a massive pothole! Everything rattles violently. Mac thinks it was an earthquake. Marge is profoundly unamused.',
     type: 'bad',
     effects: [{ type: 'morale', amount: -10 }],
   },
   {
     id: 'food-spoiled',
     title: 'Spoiled Supplies',
-    description:
-      'Some of your food has spoiled in the heat. Should have packed more ice... where\'s Elsa when you need her?',
+    description: 'Some of your food has spoiled in the heat. Should have packed more ice... where\'s Elsa when you need her? Oh right, at Crater Lake.',
     type: 'bad',
     effects: [{ type: 'resource', resource: 'food', amount: -25 }],
   },
   {
     id: 'cat-fight',
     title: 'Sibling Rivalry',
-    description:
-      'Minestrone and Mac got into a tiff over the sunny spot in the wagon. Marge had to break it up. Party morale decreased.',
+    description: 'Minestrone and Mac got into a tiff over the sunny spot in the wagon. Marge had to break it up with her Mom Energy. Party morale decreased.',
     type: 'bad',
     effects: [{ type: 'morale', amount: -15 }],
   },
   {
     id: 'lost-trail',
     title: 'Wrong Turn',
-    description:
-      'You took a wrong turn. Mac was supposed to be navigating but fell asleep. Classic Mac.',
+    description: 'You took a wrong turn. Mac was supposed to be navigating but fell asleep. In his defense, he\'s a cat. Classic Mac.',
     type: 'bad',
     effects: [{ type: 'time', amount: 1 }],
   },
   {
     id: 'wagon-squeak',
     title: 'Annoying Squeak',
-    description:
-      "The wagon has developed an annoying squeak. It's driving everyone crazy. Minestrone keeps attacking the source.",
+    description: 'The wagon has developed an annoying squeak. It\'s driving everyone crazy. Minestrone keeps attacking the source. It does not help.',
     type: 'bad',
     effects: [{ type: 'morale', amount: -5 }],
+  },
+  {
+    id: 'mac-nap-spot',
+    title: 'Mac Found a Spot',
+    description: 'Mac has claimed the driver\'s seat as his new nap spot. He refuses to move. He\'s too heavy to move. Travel is delayed while you negotiate.',
+    type: 'bad',
+    effects: [{ type: 'time', amount: 1 }],
+  },
+  {
+    id: 'minestrone-zoomies',
+    title: 'THE ZOOMIES',
+    description: 'Minestrone has the zoomies. AT 3AM. She\'s running laps around the wagon at impossible speeds. Nobody is sleeping tonight.',
+    type: 'bad',
+    effects: [{ type: 'health', target: 'all', amount: -5 }],
+  },
+  {
+    id: 'bird-distraction',
+    title: 'Bird Watching',
+    description: 'A bird flew by and all three cats are now frozen, making that weird clicking noise. Travel has stopped. They will not be moved.',
+    type: 'bad',
+    effects: [{ type: 'time', amount: 1 }],
+  },
+  {
+    id: 'treat-shortage',
+    title: 'Treat Crisis',
+    description: 'The cats have noticed the treat supplies are running low. They are staging a protest. Marge is the union leader.',
+    type: 'bad',
+    effects: [{ type: 'morale', amount: -20 }],
+  },
+  {
+    id: 'mac-ate-map',
+    title: 'Map Malfunction',
+    description: 'Mac ate part of the map. He thought it was a snack. To be fair, it was next to the snacks. This is technically your fault.',
+    type: 'bad',
+    effects: [{ type: 'time', amount: 1 }],
   },
 ];
 
@@ -178,26 +252,23 @@ export const SPECIAL_EVENTS: GameEvent[] = [
   {
     id: 'elsa-river',
     title: 'Let It Go!',
-    description:
-      'Elsa appears in a swirl of snow and ice! "The cold never bothered me anyway," she says, freezing the river solid for your crossing!',
+    description: 'Elsa appears in a magnificent swirl of snow and ice! "The cold never bothered me anyway," she says, freezing the river solid for easy crossing!',
     type: 'special',
-    effects: [],
+    effects: [{ type: 'resource', resource: 'pixieDust', amount: 10 }],
     disneyCharacter: 'elsa',
   },
   {
     id: 'baymax-healing',
     title: 'Healthcare Companion',
-    description:
-      'Baymax waddles over. "Hello. I am Baymax, your personal healthcare companion. On a scale of 1 to 10, how would you rate your pain?"',
+    description: 'Baymax waddles over to your wagon. "Hello. I am Baymax, your personal healthcare companion. On a scale of 1 to 10, how would you rate your pain?"',
     type: 'special',
-    effects: [{ type: 'health', target: 'all', amount: 20 }],
+    effects: [{ type: 'health', target: 'all', amount: 25 }],
     disneyCharacter: 'baymax',
   },
   {
     id: 'rapunzel-healing',
     title: 'Healing Hair',
-    description:
-      'Rapunzel appears with her magical golden hair! She sings a healing song. "Flower gleam and glow, let your power shine..."',
+    description: 'Rapunzel appears with her magical golden hair glowing! She sings a healing song. "Flower gleam and glow, let your power shine..." All ailments fade!',
     type: 'special',
     effects: [{ type: 'health', target: 'all', amount: 30 }],
     disneyCharacter: 'rapunzel',
@@ -205,8 +276,7 @@ export const SPECIAL_EVENTS: GameEvent[] = [
   {
     id: 'goofy-repair',
     title: 'Goofy to the Rescue!',
-    description:
-      'Goofy appears! "Gawrsh, looks like you need some help!" He fixes your wagon... mostly. "A-hyuck!"',
+    description: 'Goofy appears with a toolbox! "Gawrsh, looks like you need some help!" He fixes your wagon... mostly. "A-hyuck! Good as new!"',
     type: 'special',
     effects: [{ type: 'resource', resource: 'wagonWheels', amount: 1 }],
     disneyCharacter: 'goofy',
@@ -214,20 +284,62 @@ export const SPECIAL_EVENTS: GameEvent[] = [
   {
     id: 'mike-merchant',
     title: 'Familiar Face!',
-    description:
-      "Wait... is that Mike?! He's set up a roadside stand selling rare collectibles. \"Hey honey! Need any Magic cards?\"",
+    description: 'Wait... is that MIKE?! He\'s set up a roadside stand selling rare collectibles and trading cards. "Hey honey! How\'s the journey? Need any Magic cards?"',
     type: 'special',
-    effects: [{ type: 'morale', amount: 50 }],
+    effects: [{ type: 'morale', amount: 50 }, { type: 'resource', resource: 'goldCoins', amount: 50 }],
+  },
+  {
+    id: 'olaf-cheer',
+    title: 'Warm Hugs!',
+    description: 'Olaf waddles up to the wagon! "Hi! I\'m Olaf and I like warm hugs!" He seems perfectly fine despite the heat. His happiness is contagious!',
+    type: 'special',
+    effects: [{ type: 'morale', amount: 35 }],
+    disneyCharacter: 'olaf',
+  },
+  {
+    id: 'simba-encounter',
+    title: 'The Lion King',
+    description: 'Simba appears on a nearby rock, dramatically silhouetted against the sun! "Remember who you are." The cats are starstruck. Also slightly nervous.',
+    type: 'special',
+    effects: [{ type: 'morale', amount: 40 }],
+    disneyCharacter: 'simba',
+  },
+  {
+    id: 'fairy-godmother',
+    title: 'Bibbidi-Bobbidi-Boo!',
+    description: 'The Fairy Godmother appears in a shower of sparkles! "Even miracles take a little time." She waves her wand and... pumpkins? No wait, supplies!',
+    type: 'special',
+    effects: [
+      { type: 'resource', resource: 'food', amount: 40 },
+      { type: 'resource', resource: 'pixieDust', amount: 15 },
+    ],
+    disneyCharacter: 'fairy-godmother',
+  },
+  {
+    id: 'mushu-guidance',
+    title: 'Guardian Dragon',
+    description: 'Mushu appears! "I LIVE! So tell me what mortal needs my protection?" The tiny dragon may be small but his confidence is enormous.',
+    type: 'special',
+    effects: [{ type: 'morale', amount: 25 }],
+    disneyCharacter: 'mushu',
+  },
+  {
+    id: 'pocahontas-nature',
+    title: 'Colors of the Wind',
+    description: 'Pocahontas guides you through a beautiful path! "You can paint with all the colors of the wind." The scenery is breathtaking. Even the cats pause to look.',
+    type: 'special',
+    effects: [{ type: 'morale', amount: 30 }, { type: 'health', target: 'all', amount: 10 }],
+    disneyCharacter: 'pocahontas',
   },
 ];
 
 export function getRandomEvent(): GameEvent {
   const rand = Math.random();
 
-  // 40% chance good, 40% chance bad, 20% chance special
-  if (rand < 0.4) {
+  // 35% chance good, 35% chance bad, 30% chance special
+  if (rand < 0.35) {
     return GOOD_EVENTS[Math.floor(Math.random() * GOOD_EVENTS.length)];
-  } else if (rand < 0.8) {
+  } else if (rand < 0.7) {
     return BAD_EVENTS[Math.floor(Math.random() * BAD_EVENTS.length)];
   } else {
     return SPECIAL_EVENTS[Math.floor(Math.random() * SPECIAL_EVENTS.length)];
@@ -235,6 +347,9 @@ export function getRandomEvent(): GameEvent {
 }
 
 export function shouldTriggerEvent(): boolean {
-  // 25% chance of event each day
-  return Math.random() < 0.25;
+  // 30% chance of event each day
+  return Math.random() < 0.3;
 }
+
+export const ALL_EVENTS = [...GOOD_EVENTS, ...BAD_EVENTS, ...SPECIAL_EVENTS];
+export const TOTAL_EVENTS = ALL_EVENTS.length;

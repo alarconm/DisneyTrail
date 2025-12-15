@@ -6,12 +6,17 @@ export type GameScreen =
   | 'shop'
   | 'travel'
   | 'hunting'
+  | 'cooking'
+  | 'dancing'
+  | 'theater'
   | 'river-crossing'
   | 'landmark'
   | 'event'
   | 'rest'
   | 'game-over'
-  | 'victory';
+  | 'victory'
+  | 'achievements'
+  | 'memory-book';
 
 export type Profession =
   | 'actress'
