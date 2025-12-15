@@ -4,7 +4,7 @@ import { LANDMARKS, TOTAL_DISTANCE } from '../../data/landmarks';
 import { getRandomEvent, shouldTriggerEvent } from '../../data/events';
 import { TravelPace, RationLevel, Weather } from '../../types/game.types';
 import TabbyCat from '../sprites/TabbyCat';
-import { playSound, stopSound } from '../../services/audio';
+import { playSound } from '../../services/audio';
 
 const PACE_MILES: Record<TravelPace, number> = {
   steady: 15,
@@ -82,7 +82,6 @@ export default function TravelScreen() {
   // Save when stopping travel
   const handleStopTravel = useCallback(() => {
     setIsMoving(false);
-    stopSound('travel');
     playSound('click');
     setSaveStatus('saving');
     cloudSaveGame().then((success) => {
@@ -92,11 +91,10 @@ export default function TravelScreen() {
     });
   }, [cloudSaveGame]);
 
-  // Start travel sound
+  // Start travel
   const handleStartTravel = useCallback(() => {
     setIsMoving(true);
     playSound('click');
-    playSound('travel');
   }, []);
 
   const travelOneDay = useCallback(() => {
@@ -114,7 +112,6 @@ export default function TravelScreen() {
     // Check for random events
     if (shouldTriggerEvent()) {
       const event = getRandomEvent();
-      stopSound('travel');
       playSound('notification');
       triggerEvent(event);
       return;
@@ -122,7 +119,6 @@ export default function TravelScreen() {
 
     // Check for landmark arrival
     if (distanceToNextLandmark - miles <= 0) {
-      stopSound('travel');
       playSound('levelup');
       setScreen('landmark');
       return;

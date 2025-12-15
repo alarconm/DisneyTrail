@@ -2,23 +2,21 @@ import { Howl, Howler } from 'howler';
 
 // Sound configuration - easy to add/modify sounds
 const SOUND_CONFIG: Record<string, { src: string; volume: number; loop?: boolean }> = {
-  // UI sounds
-  click: { src: '/sounds/click.mp3', volume: 0.4 },
-  success: { src: '/sounds/success.mp3', volume: 0.5 },
-  error: { src: '/sounds/error.mp3', volume: 0.4 },
+  // UI sounds (8-bit retro from OpenGameArt - CC0 license)
+  click: { src: '/sounds/click.wav', volume: 0.4 },
+  success: { src: '/sounds/success.wav', volume: 0.5 },
+  error: { src: '/sounds/error.wav', volume: 0.4 },
 
   // Game sounds
-  travel: { src: '/sounds/travel.mp3', volume: 0.3, loop: true },
-  meow: { src: '/sounds/meow.mp3', volume: 0.5 },
-  coin: { src: '/sounds/coin.mp3', volume: 0.4 },
-  levelup: { src: '/sounds/levelup.mp3', volume: 0.5 },
-  notification: { src: '/sounds/notification.mp3', volume: 0.4 },
+  coin: { src: '/sounds/coin.wav', volume: 0.4 },
+  levelup: { src: '/sounds/levelup.wav', volume: 0.5 },
+  notification: { src: '/sounds/notification.wav', volume: 0.4 },
 
-  // Music tracks
-  music_menu: { src: '/sounds/music_menu.mp3', volume: 0.3, loop: true },
-  music_travel: { src: '/sounds/music_travel.mp3', volume: 0.25, loop: true },
-  music_victory: { src: '/sounds/music_victory.mp3', volume: 0.4, loop: true },
-  music_minigame: { src: '/sounds/music_minigame.mp3', volume: 0.3, loop: true },
+  // Music tracks (Retro Game Music Pack by Juhani Junkala - CC0 license)
+  music_menu: { src: '/sounds/music_menu.wav', volume: 0.3, loop: true },
+  music_travel: { src: '/sounds/music_travel.wav', volume: 0.2, loop: true },
+  music_victory: { src: '/sounds/music_victory.wav', volume: 0.35, loop: true },
+  music_minigame: { src: '/sounds/music_minigame.wav', volume: 0.25, loop: true },
 };
 
 // Audio manager for game sounds and music
