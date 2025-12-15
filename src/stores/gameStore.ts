@@ -58,7 +58,7 @@ interface GameActions {
   setCloudStatus: (status: { isSaving?: boolean; lastCloudSave?: string; cloudError?: string | null }) => void;
 }
 
-const initialState: GameState & { isSaving: boolean; lastCloudSave: string | null; cloudError: string | null } = {
+const initialState: GameState = {
   currentScreen: 'main-menu',
   isStarted: false,
   isPaused: false,

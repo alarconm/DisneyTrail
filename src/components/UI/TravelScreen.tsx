@@ -35,7 +35,7 @@ export default function TravelScreen() {
     setPace, setRations, setWeather,
     advanceDay, travel, consumeDailyResources, triggerEvent,
     setScreen, incrementWagonClick,
-    cloudSaveGame, isSaving, lastCloudSave,
+    cloudSaveGame, lastCloudSave,
   } = useGameStore();
 
   const [isMoving, setIsMoving] = useState(false);

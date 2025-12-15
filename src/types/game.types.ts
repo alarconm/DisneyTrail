@@ -213,6 +213,11 @@ export interface GameState {
 
   // Current event
   currentEvent: GameEvent | null;
+
+  // Cloud save status
+  isSaving: boolean;
+  lastCloudSave: string | null;
+  cloudError: string | null;
 }
 
 // Default starting values
