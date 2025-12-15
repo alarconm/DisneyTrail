@@ -4,6 +4,7 @@ import { LANDMARKS, TOTAL_DISTANCE } from '../../data/landmarks';
 import { getRandomEvent, shouldTriggerEvent } from '../../data/events';
 import { TravelPace, RationLevel, Weather } from '../../types/game.types';
 import TabbyCat from '../sprites/TabbyCat';
+import { playSound, stopSound } from '../../services/audio';
 
 const PACE_MILES: Record<TravelPace, number> = {
   steady: 15,
@@ -81,12 +82,22 @@ export default function TravelScreen() {
   // Save when stopping travel
   const handleStopTravel = useCallback(() => {
     setIsMoving(false);
+    stopSound('travel');
+    playSound('click');
     setSaveStatus('saving');
     cloudSaveGame().then((success) => {
       setSaveStatus(success ? 'saved' : 'error');
+      if (success) playSound('success');
       setTimeout(() => setSaveStatus('idle'), 2000);
     });
   }, [cloudSaveGame]);
+
+  // Start travel sound
+  const handleStartTravel = useCallback(() => {
+    setIsMoving(true);
+    playSound('click');
+    playSound('travel');
+  }, []);
 
   const travelOneDay = useCallback(() => {
     if (pace === 'resting') {
@@ -103,12 +114,16 @@ export default function TravelScreen() {
     // Check for random events
     if (shouldTriggerEvent()) {
       const event = getRandomEvent();
+      stopSound('travel');
+      playSound('notification');
       triggerEvent(event);
       return;
     }
 
     // Check for landmark arrival
     if (distanceToNextLandmark - miles <= 0) {
+      stopSound('travel');
+      playSound('levelup');
       setScreen('landmark');
       return;
     }
@@ -406,7 +421,7 @@ export default function TravelScreen() {
         {/* Main action buttons */}
         <div className="grid grid-cols-2 gap-2 mb-2">
           <button
-            onClick={() => isMoving ? handleStopTravel() : setIsMoving(true)}
+            onClick={() => isMoving ? handleStopTravel() : handleStartTravel()}
             className={`py-2 md:py-3 rounded font-bold text-xs md:text-sm transition-colors ${
               isMoving
                 ? 'bg-red-600 hover:bg-red-700 text-white'

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useGameStore } from './stores/gameStore';
 import MainMenu from './components/UI/MainMenu';
 import PartySetup from './components/UI/PartySetup';
@@ -16,9 +17,43 @@ import AchievementsScreen from './components/UI/AchievementsScreen';
 import KaraokeMiniGame from './components/UI/KaraokeMiniGame';
 import RestScreen from './components/UI/RestScreen';
 import MemoryBook from './components/UI/MemoryBook';
+import MuteButton from './components/UI/MuteButton';
+import { playMusic, stopMusic } from './services/audio';
 
 function App() {
   const { currentScreen, googlyEyesMode } = useGameStore();
+
+  // Play appropriate music based on screen
+  useEffect(() => {
+    switch (currentScreen) {
+      case 'main-menu':
+      case 'party-setup':
+        playMusic('music_menu');
+        break;
+      case 'travel':
+      case 'shop':
+      case 'landmark':
+      case 'rest':
+        playMusic('music_travel');
+        break;
+      case 'victory':
+        playMusic('music_victory');
+        break;
+      case 'hunting':
+      case 'cooking':
+      case 'dancing':
+      case 'theater':
+      case 'karaoke':
+      case 'river-crossing':
+        playMusic('music_minigame');
+        break;
+      case 'game-over':
+        stopMusic();
+        break;
+      default:
+        break;
+    }
+  }, [currentScreen]);
 
   const renderScreen = () => {
     switch (currentScreen) {
@@ -67,11 +102,12 @@ function App() {
         googlyEyesMode ? 'googly-mode' : ''
       }`}
     >
+      <MuteButton />
       <div className="relative w-full max-w-4xl">
         {/* Googly eyes overlay indicator */}
         {googlyEyesMode && (
-          <div className="absolute top-2 right-2 text-xs text-magic-gold animate-pulse z-50">
-            GOOGLY MODE ACTIVE
+          <div className="absolute top-2 right-14 text-xs text-magic-gold animate-pulse z-50">
+            GOOGLY MODE
           </div>
         )}
         {renderScreen()}

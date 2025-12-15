@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import TabbyCat from '../sprites/TabbyCat';
+import { playSound } from '../../services/audio';
 
 export default function MainMenu() {
   const { setScreen, isStarted, resetGame, cloudLoadGame, isSaving, cloudError } = useGameStore();
@@ -15,22 +16,29 @@ export default function MainMenu() {
   }, []);
 
   const handleNewGame = () => {
+    playSound('click');
     resetGame();
     setScreen('party-setup');
   };
 
   const handleContinue = () => {
+    playSound('click');
     setScreen('travel');
   };
 
   const handleLoadCloud = async () => {
     if (!loadName.trim()) {
       setLoadError('Enter your name');
+      playSound('error');
       return;
     }
     setLoadError('');
+    playSound('click');
     const success = await cloudLoadGame(loadName.trim());
-    if (!success) {
+    if (success) {
+      playSound('success');
+    } else {
+      playSound('error');
       setLoadError(cloudError || 'No save found for that name');
     }
   };
