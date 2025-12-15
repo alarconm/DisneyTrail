@@ -14,6 +14,7 @@ import {
   DEFAULT_PARTY,
   PROFESSION_BONUSES,
 } from '../types/game.types';
+import { saveToCloud, loadFromCloud, CloudSaveState } from '../services/cloudSave';
 
 interface GameActions {
   // Navigation
@@ -50,9 +51,14 @@ interface GameActions {
   // Game state
   pauseGame: () => void;
   resumeGame: () => void;
+
+  // Cloud save
+  cloudSaveGame: () => Promise<boolean>;
+  cloudLoadGame: (saveId: string) => Promise<boolean>;
+  setCloudStatus: (status: { isSaving?: boolean; lastCloudSave?: string; cloudError?: string | null }) => void;
 }
 
-const initialState: GameState = {
+const initialState: GameState & { isSaving: boolean; lastCloudSave: string | null; cloudError: string | null } = {
   currentScreen: 'main-menu',
   isStarted: false,
   isPaused: false,
@@ -73,6 +79,10 @@ const initialState: GameState = {
   googlyEyesMode: false,
   wagonClickCount: 0,
   currentEvent: null,
+  // Cloud save status
+  isSaving: false,
+  lastCloudSave: null,
+  cloudError: null,
 };
 
 export const useGameStore = create<GameState & GameActions>()(
@@ -223,6 +233,78 @@ export const useGameStore = create<GameState & GameActions>()(
       pauseGame: () => set({ isPaused: true }),
 
       resumeGame: () => set({ isPaused: false }),
+
+      setCloudStatus: (status) => set((state) => ({ ...state, ...status })),
+
+      cloudSaveGame: async () => {
+        const state = get();
+        if (!state.playerName || !state.isStarted) return false;
+
+        set({ isSaving: true, cloudError: null });
+
+        const gameState: CloudSaveState = {
+          isStarted: state.isStarted,
+          day: state.day,
+          month: state.month,
+          year: state.year,
+          playerName: state.playerName,
+          profession: state.profession,
+          partyMembers: state.partyMembers,
+          morale: state.morale,
+          resources: state.resources,
+          currentLandmarkIndex: state.currentLandmarkIndex,
+          distanceTraveled: state.distanceTraveled,
+          distanceToNextLandmark: state.distanceToNextLandmark,
+          pace: state.pace,
+          rations: state.rations,
+          googlyEyesMode: state.googlyEyesMode,
+        };
+
+        const result = await saveToCloud(state.playerName, gameState);
+
+        if (result.success) {
+          set({ isSaving: false, lastCloudSave: result.lastSaved || new Date().toISOString(), cloudError: null });
+          return true;
+        } else {
+          set({ isSaving: false, cloudError: result.error || 'Save failed' });
+          return false;
+        }
+      },
+
+      cloudLoadGame: async (saveId: string) => {
+        set({ isSaving: true, cloudError: null });
+
+        const result = await loadFromCloud(saveId);
+
+        if (result.success && result.gameState) {
+          const gs = result.gameState;
+          set({
+            currentScreen: 'travel',
+            isStarted: gs.isStarted,
+            day: gs.day,
+            month: gs.month,
+            year: gs.year,
+            playerName: gs.playerName,
+            profession: gs.profession as Profession,
+            partyMembers: gs.partyMembers as PartyMember[],
+            morale: gs.morale,
+            resources: gs.resources as Resources,
+            currentLandmarkIndex: gs.currentLandmarkIndex,
+            distanceTraveled: gs.distanceTraveled,
+            distanceToNextLandmark: gs.distanceToNextLandmark,
+            pace: gs.pace as TravelPace,
+            rations: gs.rations as RationLevel,
+            googlyEyesMode: gs.googlyEyesMode,
+            isSaving: false,
+            lastCloudSave: gs.lastSaved || null,
+            cloudError: null,
+          });
+          return true;
+        } else {
+          set({ isSaving: false, cloudError: result.error || 'Load failed' });
+          return false;
+        }
+      },
     }),
     {
       name: 'kristins-oregon-trail-save',

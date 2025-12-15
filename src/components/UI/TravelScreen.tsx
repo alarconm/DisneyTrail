@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { LANDMARKS, TOTAL_DISTANCE } from '../../data/landmarks';
 import { getRandomEvent, shouldTriggerEvent } from '../../data/events';
@@ -35,11 +35,14 @@ export default function TravelScreen() {
     setPace, setRations, setWeather,
     advanceDay, travel, consumeDailyResources, triggerEvent,
     setScreen, incrementWagonClick,
+    cloudSaveGame, isSaving, lastCloudSave,
   } = useGameStore();
 
   const [isMoving, setIsMoving] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const [timeOfDay, setTimeOfDay] = useState<'day' | 'sunset' | 'night'>('day');
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const lastSaveDay = useRef(day);
 
   const nextLandmark = LANDMARKS[currentLandmarkIndex + 1];
   const currentLandmark = LANDMARKS[currentLandmarkIndex];
@@ -62,6 +65,28 @@ export default function TravelScreen() {
       setWeather(weathers[Math.floor(Math.random() * weathers.length)]);
     }
   }, [day, currentLandmarkIndex, setWeather]);
+
+  // Auto-save every 5 days
+  useEffect(() => {
+    if (day - lastSaveDay.current >= 5) {
+      lastSaveDay.current = day;
+      setSaveStatus('saving');
+      cloudSaveGame().then((success) => {
+        setSaveStatus(success ? 'saved' : 'error');
+        setTimeout(() => setSaveStatus('idle'), 2000);
+      });
+    }
+  }, [day, cloudSaveGame]);
+
+  // Save when stopping travel
+  const handleStopTravel = useCallback(() => {
+    setIsMoving(false);
+    setSaveStatus('saving');
+    cloudSaveGame().then((success) => {
+      setSaveStatus(success ? 'saved' : 'error');
+      setTimeout(() => setSaveStatus('idle'), 2000);
+    });
+  }, [cloudSaveGame]);
 
   const travelOneDay = useCallback(() => {
     if (pace === 'resting') {
@@ -362,10 +387,26 @@ export default function TravelScreen() {
           </div>
         </div>
 
+        {/* Save indicator */}
+        <div className="flex justify-between items-center mb-2 text-[8px] md:text-[10px]">
+          <span className="text-white/40">
+            {lastCloudSave ? `Last saved: ${new Date(lastCloudSave).toLocaleTimeString()}` : 'Not saved to cloud yet'}
+          </span>
+          <span className={`${
+            saveStatus === 'saving' ? 'text-yellow-400' :
+            saveStatus === 'saved' ? 'text-green-400' :
+            saveStatus === 'error' ? 'text-red-400' : 'text-white/40'
+          }`}>
+            {saveStatus === 'saving' ? '☁️ Saving...' :
+             saveStatus === 'saved' ? '✓ Saved!' :
+             saveStatus === 'error' ? '✗ Save failed' : ''}
+          </span>
+        </div>
+
         {/* Main action buttons */}
         <div className="grid grid-cols-2 gap-2 mb-2">
           <button
-            onClick={() => setIsMoving(!isMoving)}
+            onClick={() => isMoving ? handleStopTravel() : setIsMoving(true)}
             className={`py-2 md:py-3 rounded font-bold text-xs md:text-sm transition-colors ${
               isMoving
                 ? 'bg-red-600 hover:bg-red-700 text-white'

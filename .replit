@@ -1,14 +1,13 @@
-run = "npm run dev"
-entrypoint = "src/main.tsx"
+run = "npm run start"
+entrypoint = "server/index.js"
 
 [nix]
 channel = "stable-24_05"
 
 [deployment]
-run = ["sh", "-c", "npm run build && npm run preview"]
-deploymentTarget = "static"
-publicDir = "dist"
+run = ["sh", "-c", "npm run start"]
+deploymentTarget = "cloudrun"
 
 [[ports]]
-localPort = 5173
+localPort = 3000
 externalPort = 80
