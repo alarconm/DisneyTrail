@@ -6,14 +6,16 @@
 
 :root {
   font-family: 'Press Start 2P', monospace;
-  line-height: 1.5;
+  line-height: 1.8;
   font-weight: 400;
   color: #efefef;
   background-color: #1a1a2e;
   font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* Use crisp rendering for pixel fonts */
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  font-smooth: never;
 }
 
 body {
