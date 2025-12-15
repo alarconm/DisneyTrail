@@ -53,9 +53,99 @@ const SCRIPTS: Script[] = [
     ],
     correctEmotions: ['🤩', '😌', '💪'],
   },
+  {
+    scene: 'Aladdin - A Whole New World',
+    lines: [
+      { speaker: '🧞', text: 'You ain\'t never had a friend like me!', emotion: 'boastful' },
+      { speaker: '🧕', text: 'A whole new world...', emotion: 'wonder' },
+      { speaker: '🐒', text: '*steals something shiny*', emotion: 'mischievous' },
+    ],
+    correctEmotions: ['😎', '🤩', '😈'],
+  },
+  {
+    scene: 'The Little Mermaid - Under the Sea',
+    lines: [
+      { speaker: '🧜‍♀️', text: 'I want to be where the people are!', emotion: 'yearning' },
+      { speaker: '🦀', text: 'Under the sea!', emotion: 'joyful' },
+      { speaker: '🐙', text: 'Poor unfortunate souls...', emotion: 'sinister' },
+    ],
+    correctEmotions: ['🥺', '😄', '😈'],
+  },
+  {
+    scene: 'Mulan - I\'ll Make a Man Out of You',
+    lines: [
+      { speaker: '🐉', text: 'I AM THE GREAT STONE DRAGON!', emotion: 'dramatic' },
+      { speaker: '⚔️', text: "Let's get down to business!", emotion: 'determined' },
+      { speaker: '🦗', text: '*lucky cricket chirp*', emotion: 'hopeful' },
+    ],
+    correctEmotions: ['🤩', '💪', '🥺'],
+  },
+  {
+    scene: 'Encanto - We Don\'t Talk About Bruno',
+    lines: [
+      { speaker: '🦋', text: 'We don\'t talk about Bruno, no, no, no!', emotion: 'secretive' },
+      { speaker: '🔮', text: 'I see something bad...', emotion: 'worried' },
+      { speaker: '💪', text: 'I need to lift this weight!', emotion: 'strained' },
+    ],
+    correctEmotions: ['🤫', '😰', '😤'],
+  },
+  {
+    scene: 'Coco - Remember Me',
+    lines: [
+      { speaker: '🎸', text: 'Remember me...', emotion: 'bittersweet' },
+      { speaker: '💀', text: 'Seize your moment!', emotion: 'encouraging' },
+      { speaker: '🐕', text: '*loyal companion bark*', emotion: 'faithful' },
+    ],
+    correctEmotions: ['😢', '💪', '🥰'],
+  },
+  {
+    scene: 'Toy Story - You\'ve Got a Friend in Me',
+    lines: [
+      { speaker: '🤠', text: 'To infinity...', emotion: 'heroic' },
+      { speaker: '🚀', text: '...and beyond!', emotion: 'confident' },
+      { speaker: '🦖', text: 'I don\'t like confrontation!', emotion: 'nervous' },
+    ],
+    correctEmotions: ['💪', '😎', '😰'],
+  },
+  {
+    scene: 'Finding Nemo - Just Keep Swimming',
+    lines: [
+      { speaker: '🐠', text: 'NEMO!!!', emotion: 'desperate' },
+      { speaker: '🐟', text: 'Just keep swimming!', emotion: 'optimistic' },
+      { speaker: '🦈', text: 'Fish are friends, not food!', emotion: 'reformed' },
+    ],
+    correctEmotions: ['😱', '😄', '😌'],
+  },
+  {
+    scene: 'Lilo & Stitch - Ohana',
+    lines: [
+      { speaker: '👽', text: 'Ohana means family...', emotion: 'learning' },
+      { speaker: '👧', text: '...and family means nobody gets left behind!', emotion: 'determined' },
+      { speaker: '👽', text: 'Also cute and fluffy!', emotion: 'proud' },
+    ],
+    correctEmotions: ['🤔', '💪', '😊'],
+  },
+  {
+    scene: 'Hercules - Zero to Hero',
+    lines: [
+      { speaker: '💪', text: 'I can go the distance!', emotion: 'determined' },
+      { speaker: '😈', text: 'Name is Hades, Lord of the dead.', emotion: 'sarcastic' },
+      { speaker: '🐴', text: '*heroic whinny*', emotion: 'noble' },
+    ],
+    correctEmotions: ['💪', '😏', '😎'],
+  },
+  {
+    scene: 'Pocahontas - Colors of the Wind',
+    lines: [
+      { speaker: '🍃', text: 'Can you paint with all the colors of the wind?', emotion: 'wise' },
+      { speaker: '🦝', text: '*curious raccoon chittering*', emotion: 'playful' },
+      { speaker: '🌳', text: 'Listen with your heart...', emotion: 'mystical' },
+    ],
+    correctEmotions: ['😌', '😄', '🥰'],
+  },
 ];
 
-const ALL_EMOTIONS = ['🤔', '😄', '🤣', '😌', '🤗', '🥺', '😔', '🤩', '😐', '🥰', '😊', '😎', '💪', '😢', '😠', '🥳'];
+const ALL_EMOTIONS = ['🤔', '😄', '🤣', '😌', '🤗', '🥺', '😔', '🤩', '😐', '🥰', '😊', '😎', '💪', '😢', '😠', '🥳', '😈', '😱', '😰', '🤫', '😤', '😏'];
 
 export default function TheaterMiniGame() {
   const { setScreen } = useGameStore();

@@ -9,6 +9,7 @@ export type GameScreen =
   | 'cooking'
   | 'dancing'
   | 'theater'
+  | 'karaoke'
   | 'river-crossing'
   | 'landmark'
   | 'event'
@@ -16,7 +17,71 @@ export type GameScreen =
   | 'game-over'
   | 'victory'
   | 'achievements'
-  | 'memory-book';
+  | 'memory-book'
+  | 'settings';
+
+// Karaoke System
+export interface KaraokeSong {
+  id: string;
+  title: string;
+  movie: string;
+  lyrics: KaraokeLine[];
+  difficulty: 'easy' | 'medium' | 'hard';
+  bpm: number;
+}
+
+export interface KaraokeLine {
+  text: string;
+  startTime: number; // ms from start
+  duration: number; // ms
+  hitZones: number[]; // positions (0-100) where player should tap
+}
+
+// Achievement System
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  emoji: string;
+  category: 'journey' | 'minigame' | 'cats' | 'secret' | 'challenge';
+  unlocked: boolean;
+  unlockedAt?: Date;
+  progress?: number;
+  maxProgress?: number;
+}
+
+// Cat Happiness System
+export interface CatHappiness {
+  marge: number; // 0-100
+  minestrone: number;
+  mac: number;
+}
+
+export interface CatPreference {
+  catId: string;
+  likes: string[];
+  dislikes: string[];
+}
+
+// Memory Book System
+export interface MemoryPhoto {
+  id: string;
+  landmark: string;
+  day: number;
+  month: number;
+  year: number;
+  caption: string;
+  characters: string[];
+  mood: 'happy' | 'excited' | 'tired' | 'silly';
+}
+
+// Audio Settings
+export interface AudioSettings {
+  musicVolume: number; // 0-100
+  sfxVolume: number;
+  musicEnabled: boolean;
+  sfxEnabled: boolean;
+}
 
 export type Profession =
   | 'actress'

@@ -13,6 +13,9 @@ import RiverCrossing from './components/UI/RiverCrossing';
 import VictoryScreen from './components/UI/VictoryScreen';
 import GameOverScreen from './components/UI/GameOverScreen';
 import AchievementsScreen from './components/UI/AchievementsScreen';
+import KaraokeMiniGame from './components/UI/KaraokeMiniGame';
+import RestScreen from './components/UI/RestScreen';
+import MemoryBook from './components/UI/MemoryBook';
 
 function App() {
   const { currentScreen, googlyEyesMode } = useGameStore();
@@ -47,6 +50,12 @@ function App() {
         return <GameOverScreen />;
       case 'achievements':
         return <AchievementsScreen />;
+      case 'karaoke':
+        return <KaraokeMiniGame />;
+      case 'rest':
+        return <RestScreen />;
+      case 'memory-book':
+        return <MemoryBook />;
       default:
         return <MainMenu />;
     }

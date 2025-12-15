@@ -195,13 +195,29 @@ export default function MainMenu() {
         </div>
       </div>
 
+      {/* Christmas lights decoration */}
+      <div className="flex justify-center gap-2 my-4 relative z-10">
+        {['🔴', '🟡', '🟢', '🔵', '🟣', '🔴', '🟡', '🟢'].map((light, i) => (
+          <span
+            key={i}
+            className="text-sm animate-pulse"
+            style={{ animationDelay: `${i * 0.2}s` }}
+          >
+            {light}
+          </span>
+        ))}
+      </div>
+
       {/* Footer with love */}
-      <div className="text-center mt-6 md:mt-8 relative z-10">
-        <div className="inline-block px-4 py-2 bg-white/5 rounded-full">
-          <p className="text-xs text-white/50">
-            A Christmas gift from Mike 💕
+      <div className="text-center mt-4 md:mt-6 relative z-10">
+        <div className="inline-block px-4 py-2 bg-gradient-to-r from-red-900/30 via-green-900/30 to-red-900/30 rounded-full border border-red-500/20">
+          <p className="text-xs text-white/70">
+            🎄 A Christmas gift from Mike 💕 🎄
           </p>
         </div>
+        <p className="text-[10px] text-white/30 mt-2">
+          Merry Christmas 2025, Kristin!
+        </p>
       </div>
 
       {/* Corner decorations */}
@@ -211,11 +227,17 @@ export default function MainMenu() {
       <div className="absolute bottom-2 right-2 md:bottom-4 md:right-4 text-xl md:text-2xl opacity-40 animate-pulse" style={{ animationDelay: '1s' }}>
         🏰
       </div>
-      <div className="absolute top-2 left-2 md:top-4 md:left-4 text-lg opacity-30">
+      <div className="absolute top-2 left-2 md:top-4 md:left-4 text-lg opacity-50">
+        🎄
+      </div>
+      <div className="absolute top-2 right-2 md:top-4 md:right-4 text-lg opacity-50">
+        🎁
+      </div>
+      <div className="absolute top-12 left-2 md:top-16 md:left-4 text-sm opacity-30 animate-bounce" style={{ animationDuration: '3s' }}>
         ❄️
       </div>
-      <div className="absolute top-2 right-2 md:top-4 md:right-4 text-lg opacity-30">
-        ✨
+      <div className="absolute top-20 right-4 md:top-24 md:right-6 text-sm opacity-30 animate-bounce" style={{ animationDuration: '4s', animationDelay: '1s' }}>
+        ❄️
       </div>
     </div>
   );
