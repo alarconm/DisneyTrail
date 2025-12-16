@@ -23,7 +23,7 @@ const KEY_MAP: Record<string, Direction> = {
 };
 
 export default function DancingMiniGame() {
-  const { setScreen, updateAchievementStats, achievementStats, incrementAchievementStat } = useGameStore();
+  const { setScreen, updateAchievementStats, achievementStats, incrementAchievementStat, updateResources, resources } = useGameStore();
   const [perfectCount, setPerfectCount] = useState(0);
   const [moves, setMoves] = useState<DanceMove[]>([]);
   const [score, setScore] = useState(0);
@@ -157,7 +157,17 @@ export default function DancingMiniGame() {
       incrementAchievementStat('dancePerfectNotes', perfectCount);
     }
 
-    // Award morale based on performance (score / 100) * 5
+    // Award pixie dust based on performance - dancing creates magic!
+    const pixieDustReward = Math.floor(score / 200) * 3;
+    if (pixieDustReward > 0) {
+      updateResources({ pixieDust: resources.pixieDust + pixieDustReward });
+    }
+
+    // Award cat treats for entertaining the cats
+    if (score >= 500) {
+      updateResources({ catTreats: resources.catTreats + 5 });
+    }
+
     setScreen('travel');
   };
 

@@ -149,7 +149,7 @@ const SCRIPTS: Script[] = [
 const ALL_EMOTIONS = ['🤔', '😄', '🤣', '😌', '🤗', '🥺', '😔', '🤩', '😐', '🥰', '😊', '😎', '💪', '😢', '😠', '🥳', '😈', '😱', '😰', '🤫', '😤', '😏'];
 
 export default function TheaterMiniGame() {
-  const { setScreen } = useGameStore();
+  const { setScreen, updateResources, resources, incrementAchievementStat, updateAchievementStats } = useGameStore();
   const [currentScript, setCurrentScript] = useState<Script | null>(null);
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [selectedEmotions, setSelectedEmotions] = useState<string[]>([]);
@@ -220,7 +220,21 @@ export default function TheaterMiniGame() {
 
   const handleFinish = () => {
     playSound('success');
-    // Award morale based on performance
+
+    // Award pixie dust based on performance (theater magic!)
+    const pixieDustReward = Math.floor(score / 100) * 2;
+    if (pixieDustReward > 0) {
+      updateResources({ pixieDust: resources.pixieDust + pixieDustReward });
+    }
+
+    // Track perfect shows (all 3 scenes completed = 900+ score)
+    if (score >= 900) {
+      incrementAchievementStat('theaterPerfectShows');
+    }
+
+    // Track theater reference achievement
+    updateAchievementStats({ foundTheaterReference: true });
+
     setScreen('travel');
   };
 

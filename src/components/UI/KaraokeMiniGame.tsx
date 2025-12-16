@@ -7,7 +7,7 @@ import { playSound } from '../../services/audio';
 type HitResult = 'perfect' | 'good' | 'miss' | null;
 
 export default function KaraokeMiniGame() {
-  const { setScreen, incrementAchievementStat, updateAchievementStats, achievementStats } = useGameStore();
+  const { setScreen, incrementAchievementStat, updateAchievementStats, achievementStats, updateResources, resources } = useGameStore();
   const [gameState, setGameState] = useState<'select' | 'playing' | 'results'>('select');
   const [selectedSong, setSelectedSong] = useState<KaraokeSong | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
@@ -244,7 +244,7 @@ export default function KaraokeMiniGame() {
     );
   }
 
-  // Track achievements when game ends
+  // Track achievements and give rewards when game ends
   useEffect(() => {
     if (gameState === 'results') {
       const grade = getGrade();
@@ -265,6 +265,18 @@ export default function KaraokeMiniGame() {
       // Update high score
       if (score > achievementStats.karaokeHighScore) {
         updateAchievementStats({ karaokeHighScore: score });
+      }
+
+      // Award pixie dust based on grade - singing is magical!
+      const pixieDustRewards: Record<string, number> = { 'S': 20, 'A': 12, 'B': 8, 'C': 4, 'D': 2 };
+      const pixieDustReward = pixieDustRewards[grade] || 0;
+      if (pixieDustReward > 0) {
+        updateResources({ pixieDust: resources.pixieDust + pixieDustReward });
+      }
+
+      // Bonus gold for S rank performances
+      if (grade === 'S') {
+        updateResources({ goldCoins: resources.goldCoins + 25 });
       }
     }
   }, [gameState]);
