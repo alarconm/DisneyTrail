@@ -7,7 +7,7 @@ import { playSound } from '../../services/audio';
 type HitResult = 'perfect' | 'good' | 'miss' | null;
 
 export default function KaraokeMiniGame() {
-  const { setScreen } = useGameStore();
+  const { setScreen, incrementAchievementStat, updateAchievementStats, achievementStats } = useGameStore();
   const [gameState, setGameState] = useState<'select' | 'playing' | 'results'>('select');
   const [selectedSong, setSelectedSong] = useState<KaraokeSong | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
@@ -243,6 +243,31 @@ export default function KaraokeMiniGame() {
       </div>
     );
   }
+
+  // Track achievements when game ends
+  useEffect(() => {
+    if (gameState === 'results') {
+      const grade = getGrade();
+
+      // Track songs played
+      incrementAchievementStat('karaokeSongsPlayed');
+
+      // Track S ranks
+      if (grade === 'S') {
+        incrementAchievementStat('karaokeSRanks');
+      }
+
+      // Update max combo if higher
+      if (maxCombo > achievementStats.maxCombo) {
+        updateAchievementStats({ maxCombo });
+      }
+
+      // Update high score
+      if (score > achievementStats.karaokeHighScore) {
+        updateAchievementStats({ karaokeHighScore: score });
+      }
+    }
+  }, [gameState]);
 
   // Results screen
   if (gameState === 'results') {

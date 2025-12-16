@@ -23,7 +23,8 @@ const KEY_MAP: Record<string, Direction> = {
 };
 
 export default function DancingMiniGame() {
-  const { setScreen } = useGameStore();
+  const { setScreen, updateAchievementStats, achievementStats, incrementAchievementStat } = useGameStore();
+  const [perfectCount, setPerfectCount] = useState(0);
   const [moves, setMoves] = useState<DanceMove[]>([]);
   const [score, setScore] = useState(0);
   const [combo, setCombo] = useState(0);
@@ -105,6 +106,10 @@ export default function DancingMiniGame() {
         });
         setFeedback(isPerfect ? 'perfect' : 'good');
         setMoves((prev) => prev.filter((m) => m.id !== matchingMove.id));
+        // Track perfect hits
+        if (isPerfect) {
+          setPerfectCount((c) => c + 1);
+        }
 
         // Change dance partner on combos
         if ((combo + 1) % 5 === 0) {
@@ -140,6 +145,18 @@ export default function DancingMiniGame() {
 
   const handleFinish = () => {
     playSound('success');
+
+    // Track dance achievements
+    if (score > achievementStats.danceHighScore) {
+      updateAchievementStats({ danceHighScore: score });
+    }
+    if (maxCombo > achievementStats.maxCombo) {
+      updateAchievementStats({ maxCombo });
+    }
+    if (perfectCount > 0) {
+      incrementAchievementStat('dancePerfectNotes', perfectCount);
+    }
+
     // Award morale based on performance (score / 100) * 5
     setScreen('travel');
   };

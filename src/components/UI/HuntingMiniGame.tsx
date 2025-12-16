@@ -42,7 +42,7 @@ const SPECIAL_ANIMALS = [
 ];
 
 export default function HuntingMiniGame() {
-  const { setScreen, updateResources, resources } = useGameStore();
+  const { setScreen, updateResources, resources, incrementAchievementStat } = useGameStore();
   const [animals, setAnimals] = useState<Animal[]>([]);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(30);
@@ -199,6 +199,10 @@ export default function HuntingMiniGame() {
   const handleFinish = () => {
     playSound('success');
     updateResources({ food: resources.food + score });
+    // Track foraging food for achievements
+    if (score > 0) {
+      incrementAchievementStat('foragingTotalFood', score);
+    }
     setScreen('travel');
   };
 

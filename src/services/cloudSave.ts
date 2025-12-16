@@ -20,6 +20,7 @@ export interface CloudSaveState {
   pace: string;
   rations: string;
   googlyEyesMode: boolean;
+  achievementStats?: unknown;
   lastSaved?: string;
 }
 

@@ -2,7 +2,10 @@ import { useGameStore } from '../../stores/gameStore';
 import { playSound } from '../../services/audio';
 
 export default function EventScreen() {
-  const { currentEvent, clearEvent, updateResources, resources, partyMembers, updatePartyMember } = useGameStore();
+  const {
+    currentEvent, clearEvent, updateResources, resources, partyMembers, updatePartyMember,
+    addDisneyCharacterMet, incrementAchievementStat, updateAchievementStats
+  } = useGameStore();
 
   if (!currentEvent) {
     clearEvent();
@@ -11,6 +14,40 @@ export default function EventScreen() {
 
   const handleContinue = () => {
     playSound('click');
+
+    // Track Disney character encounters for achievements
+    if (currentEvent.disneyCharacter) {
+      addDisneyCharacterMet(currentEvent.disneyCharacter);
+    }
+
+    // Track special event achievements
+    switch (currentEvent.id) {
+      case 'minestrone-food-raid':
+      case 'minestrone-zoomies':
+        incrementAchievementStat('minestroneEventsCount');
+        break;
+      case 'mac-wheel':
+      case 'mac-ate-map':
+      case 'mac-nap-spot':
+        incrementAchievementStat('macBreaksCount');
+        break;
+      case 'mtg-booster':
+        updateAchievementStats({ foundMTGBooster: true });
+        break;
+      case 'oregon-duck-blessing':
+        updateAchievementStats({ foundDuckBlessing: true });
+        break;
+      case 'theater-troupe':
+        updateAchievementStats({ foundTheaterReference: true });
+        break;
+      case 'mike-love-note':
+        updateAchievementStats({ foundLoveNote: true });
+        break;
+      case 'mike-merchant':
+        addDisneyCharacterMet('mike');
+        break;
+    }
+
     // Apply event effects
     currentEvent.effects.forEach((effect) => {
       switch (effect.type) {

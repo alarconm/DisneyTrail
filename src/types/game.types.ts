@@ -179,6 +179,60 @@ export interface HuntingAnimal {
   specialMessage?: string;
 }
 
+// Achievement tracking stats
+export interface AchievementStats {
+  // Cat achievements
+  restCount: number;
+  treatsGiven: number;
+  minestroneEventsCount: number;
+  macBreaksCount: number;
+
+  // Minigame achievements
+  karaokeHighScore: number;
+  karaokeSongsPlayed: number;
+  karaokeSRanks: number;
+  theaterPerfectShows: number;
+  danceHighScore: number;
+  dancePerfectNotes: number;
+  cookingRecipesCompleted: number;
+  foragingTotalFood: number;
+  maxCombo: number;
+
+  // Secret achievements
+  disneyCharactersMet: string[];
+  foundLoveNote: boolean;
+  foundMTGBooster: boolean;
+  foundDuckBlessing: boolean;
+  foundTheaterReference: boolean;
+
+  // Challenge achievements
+  usedGruelingPace: boolean;
+  ranOutOfFood: boolean;
+}
+
+export const DEFAULT_ACHIEVEMENT_STATS: AchievementStats = {
+  restCount: 0,
+  treatsGiven: 0,
+  minestroneEventsCount: 0,
+  macBreaksCount: 0,
+  karaokeHighScore: 0,
+  karaokeSongsPlayed: 0,
+  karaokeSRanks: 0,
+  theaterPerfectShows: 0,
+  danceHighScore: 0,
+  dancePerfectNotes: 0,
+  cookingRecipesCompleted: 0,
+  foragingTotalFood: 0,
+  maxCombo: 0,
+  disneyCharactersMet: [],
+  foundLoveNote: false,
+  foundMTGBooster: false,
+  foundDuckBlessing: false,
+  foundTheaterReference: false,
+  usedGruelingPace: false,
+  ranOutOfFood: false,
+};
+
 export interface GameState {
   // Current screen
   currentScreen: GameScreen;
@@ -213,6 +267,9 @@ export interface GameState {
 
   // Current event
   currentEvent: GameEvent | null;
+
+  // Achievement tracking
+  achievementStats: AchievementStats;
 
   // Cloud save status
   isSaving: boolean;

@@ -10,9 +10,11 @@ import {
   RationLevel,
   Weather,
   Profession,
+  AchievementStats,
   DEFAULT_RESOURCES,
   DEFAULT_PARTY,
   PROFESSION_BONUSES,
+  DEFAULT_ACHIEVEMENT_STATS,
 } from '../types/game.types';
 import { saveToCloud, loadFromCloud, CloudSaveState } from '../services/cloudSave';
 
@@ -52,6 +54,11 @@ interface GameActions {
   pauseGame: () => void;
   resumeGame: () => void;
 
+  // Achievement tracking
+  updateAchievementStats: (updates: Partial<AchievementStats>) => void;
+  incrementAchievementStat: (stat: keyof AchievementStats, amount?: number) => void;
+  addDisneyCharacterMet: (character: string) => void;
+
   // Cloud save
   cloudSaveGame: () => Promise<boolean>;
   cloudLoadGame: (saveId: string) => Promise<boolean>;
@@ -79,6 +86,8 @@ const initialState: GameState = {
   googlyEyesMode: false,
   wagonClickCount: 0,
   currentEvent: null,
+  // Achievement tracking
+  achievementStats: { ...DEFAULT_ACHIEVEMENT_STATS },
   // Cloud save status
   isSaving: false,
   lastCloudSave: null,
@@ -105,6 +114,7 @@ export const useGameStore = create<GameState & GameActions>()(
             ...DEFAULT_RESOURCES,
             goldCoins: bonusGold,
           },
+          achievementStats: { ...DEFAULT_ACHIEVEMENT_STATS },
         });
       },
 
@@ -145,12 +155,18 @@ export const useGameStore = create<GameState & GameActions>()(
         ).length;
         const dailyTreats = catCount > 0 ? 1 : 0;
 
+        const newFood = Math.max(0, state.resources.food - dailyFood);
+
+        // Track if food ever runs out
+        const ranOutOfFood = newFood === 0 ? true : state.achievementStats.ranOutOfFood;
+
         set((state) => ({
           resources: {
             ...state.resources,
-            food: Math.max(0, state.resources.food - dailyFood),
+            food: newFood,
             catTreats: Math.max(0, state.resources.catTreats - dailyTreats),
           },
+          achievementStats: { ...state.achievementStats, ranOutOfFood },
         }));
       },
 
@@ -189,7 +205,17 @@ export const useGameStore = create<GameState & GameActions>()(
         }
       },
 
-      setPace: (pace) => set({ pace }),
+      setPace: (pace) => {
+        // Track if grueling pace is ever used
+        if (pace === 'grueling') {
+          set((state) => ({
+            pace,
+            achievementStats: { ...state.achievementStats, usedGruelingPace: true },
+          }));
+        } else {
+          set({ pace });
+        }
+      },
 
       setRations: (rations) => set({ rations }),
 
@@ -234,6 +260,40 @@ export const useGameStore = create<GameState & GameActions>()(
 
       resumeGame: () => set({ isPaused: false }),
 
+      // Achievement tracking methods
+      updateAchievementStats: (updates) =>
+        set((state) => ({
+          achievementStats: { ...state.achievementStats, ...updates },
+        })),
+
+      incrementAchievementStat: (stat, amount = 1) =>
+        set((state) => {
+          const currentValue = state.achievementStats[stat];
+          if (typeof currentValue === 'number') {
+            return {
+              achievementStats: {
+                ...state.achievementStats,
+                [stat]: currentValue + amount,
+              },
+            };
+          }
+          return state;
+        }),
+
+      addDisneyCharacterMet: (character) =>
+        set((state) => {
+          const met = state.achievementStats.disneyCharactersMet;
+          if (!met.includes(character)) {
+            return {
+              achievementStats: {
+                ...state.achievementStats,
+                disneyCharactersMet: [...met, character],
+              },
+            };
+          }
+          return state;
+        }),
+
       setCloudStatus: (status) => set((state) => ({ ...state, ...status })),
 
       cloudSaveGame: async () => {
@@ -258,6 +318,7 @@ export const useGameStore = create<GameState & GameActions>()(
           pace: state.pace,
           rations: state.rations,
           googlyEyesMode: state.googlyEyesMode,
+          achievementStats: state.achievementStats,
         };
 
         const result = await saveToCloud(state.playerName, gameState);
@@ -295,6 +356,7 @@ export const useGameStore = create<GameState & GameActions>()(
             pace: gs.pace as TravelPace,
             rations: gs.rations as RationLevel,
             googlyEyesMode: gs.googlyEyesMode,
+            achievementStats: (gs.achievementStats as AchievementStats) || { ...DEFAULT_ACHIEVEMENT_STATS },
             isSaving: false,
             lastCloudSave: gs.lastSaved || null,
             cloudError: null,
@@ -325,6 +387,7 @@ export const useGameStore = create<GameState & GameActions>()(
         pace: state.pace,
         rations: state.rations,
         googlyEyesMode: state.googlyEyesMode,
+        achievementStats: state.achievementStats,
       }),
     }
   )

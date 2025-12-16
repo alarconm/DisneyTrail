@@ -22,7 +22,7 @@ const RECIPES: Recipe[] = [
 const ALL_INGREDIENTS = ['🥜', '🍫', '🍇', '🍎', '🍊', '🍓', '🥕', '🥔', '🧅', '🍖', '🍆', '🍅', '🫑', '🧄', '🥛', '🥚', '🧈', '🦐', '🍚', '🌶️'];
 
 export default function CookingMiniGame() {
-  const { setScreen, updateResources, resources, updatePartyMember, partyMembers } = useGameStore();
+  const { setScreen, updateResources, resources, updatePartyMember, partyMembers, incrementAchievementStat } = useGameStore();
   const [currentRecipe, setCurrentRecipe] = useState<Recipe | null>(null);
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [availableIngredients, setAvailableIngredients] = useState<string[]>([]);
@@ -110,6 +110,9 @@ export default function CookingMiniGame() {
       setRecipesCompleted((r) => r + 1);
       setShowSuccess(true);
       setMessage(`Perfect ${currentRecipe.name}! +${currentRecipe.reward} food!`);
+
+      // Track recipe completions for achievements
+      incrementAchievementStat('cookingRecipesCompleted');
 
       // Bonus time for completing recipes
       setTimeLeft((t) => Math.min(90, t + 10));

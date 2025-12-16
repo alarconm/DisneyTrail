@@ -43,6 +43,7 @@ export default function TravelScreen() {
   const [statusMessage, setStatusMessage] = useState('');
   const [timeOfDay, setTimeOfDay] = useState<'day' | 'sunset' | 'night'>('day');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [showMenu, setShowMenu] = useState(false);
   const lastSaveDay = useRef(day);
 
   const nextLandmark = LANDMARKS[currentLandmarkIndex + 1];
@@ -169,10 +170,79 @@ export default function TravelScreen() {
     return 'happy';
   };
 
+  const handleManualSave = async () => {
+    setSaveStatus('saving');
+    const success = await cloudSaveGame();
+    setSaveStatus(success ? 'saved' : 'error');
+    if (success) playSound('success');
+    setTimeout(() => setSaveStatus('idle'), 2000);
+  };
+
+  const handleQuitToMenu = () => {
+    playSound('click');
+    setScreen('main-menu');
+  };
+
   return (
-    <div className="bg-gradient-to-b from-[#1a1a2e] to-[#0f3460] rounded-lg shadow-2xl border-4 border-trail-brown overflow-hidden">
+    <div className="bg-gradient-to-b from-[#1a1a2e] to-[#0f3460] rounded-lg shadow-2xl border-4 border-trail-brown overflow-hidden relative">
+      {/* Menu Modal */}
+      {showMenu && (
+        <div className="absolute inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+          <div className="bg-gradient-to-b from-[#1a1a2e] to-[#0f3460] rounded-lg p-6 max-w-sm w-full border-4 border-magic-gold">
+            <h2 className="text-xl text-magic-gold text-center mb-6">Game Menu</h2>
+
+            <div className="space-y-3">
+              <button
+                onClick={() => { handleManualSave(); }}
+                disabled={saveStatus === 'saving'}
+                className="w-full py-3 bg-prairie-green hover:bg-green-700 disabled:bg-gray-600 text-white rounded-lg transition-colors flex items-center justify-center gap-2"
+              >
+                {saveStatus === 'saving' ? '☁️ Saving...' : saveStatus === 'saved' ? '✓ Saved!' : '💾 Save Game'}
+              </button>
+
+              <button
+                onClick={() => { playSound('click'); setShowMenu(false); setScreen('achievements'); }}
+                className="w-full py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors"
+              >
+                🏆 Achievements
+              </button>
+
+              <button
+                onClick={() => { playSound('click'); setShowMenu(false); setScreen('settings'); }}
+                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+              >
+                ⚙️ Settings
+              </button>
+
+              <button
+                onClick={handleQuitToMenu}
+                className="w-full py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+              >
+                🚪 Quit to Main Menu
+              </button>
+            </div>
+
+            <button
+              onClick={() => { playSound('click'); setShowMenu(false); }}
+              className="w-full mt-4 py-2 bg-white/10 hover:bg-white/20 text-white/70 rounded-lg transition-colors text-sm"
+            >
+              Continue Playing
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Sky and landscape */}
       <div className={`relative h-28 md:h-36 bg-gradient-to-b ${getSkyGradient()} transition-all duration-1000`}>
+        {/* Menu button */}
+        <button
+          onClick={() => { playSound('click'); setIsMoving(false); setShowMenu(true); }}
+          className="absolute top-2 left-2 z-10 p-2 bg-black/30 hover:bg-black/50 rounded-lg text-white text-lg transition-colors"
+          title="Menu"
+        >
+          ☰
+        </button>
+
         {/* Sun/Moon */}
         {timeOfDay === 'night' ? (
           <div className="absolute top-4 right-8 w-8 h-8 md:w-10 md:h-10 bg-gray-200 rounded-full shadow-lg shadow-gray-200/30" />

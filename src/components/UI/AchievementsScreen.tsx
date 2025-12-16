@@ -5,12 +5,17 @@ import { ACHIEVEMENTS, ACHIEVEMENT_CATEGORIES, Achievement } from '../../data/ac
 import { playSound } from '../../services/audio';
 
 export default function AchievementsScreen() {
-  const { setScreen, distanceTraveled, currentLandmarkIndex, partyMembers, googlyEyesMode, day } = useGameStore();
+  const { setScreen, distanceTraveled, currentLandmarkIndex, partyMembers, googlyEyesMode, day, achievementStats } = useGameStore();
   const [selectedCategory, setSelectedCategory] = useState<Achievement['category'] | 'all'>('all');
+
+  // Check if game has actually been played (traveled at least some distance)
+  const hasStartedJourney = distanceTraveled > 0;
+  const hasCompletedGame = currentLandmarkIndex >= LANDMARKS.length - 1;
 
   // Calculate which achievements are unlocked based on game state
   const getUnlockedStatus = (achievement: Achievement): boolean => {
     switch (achievement.id) {
+      // Journey achievements
       case 'first-steps':
         return distanceTraveled > 0;
       case 'oregon-explorer':
@@ -24,21 +29,86 @@ export default function AchievementsScreen() {
       case 'florida-bound':
         return distanceTraveled >= 3000;
       case 'disney-dreamer':
-        return currentLandmarkIndex >= LANDMARKS.length - 1;
+        return hasCompletedGame;
       case 'cross-country':
         return currentLandmarkIndex >= 5;
       case 'road-warrior':
         return day >= 100;
+
+      // Cat achievements - require some progress
       case 'cat-whisperer':
-        return partyMembers.filter(m => m.isAlive && m.type === 'cat').length === 3 && currentLandmarkIndex >= LANDMARKS.length - 1;
+        return hasCompletedGame && partyMembers.filter(m => m.isAlive && m.type === 'cat').length === 3;
       case 'marge-approved':
-        return partyMembers.find(m => m.id === 'marge')?.health === 100;
+        return hasStartedJourney && partyMembers.find(m => m.id === 'marge')?.health === 100;
+      case 'minestrone-mischief':
+        return achievementStats.minestroneEventsCount >= 10;
+      case 'mac-attack':
+        return achievementStats.macBreaksCount >= 3;
+      case 'treat-master':
+        return achievementStats.treatsGiven >= 100;
+      case 'cuddle-champion':
+        return achievementStats.restCount >= 10;
+      case 'happy-family':
+        return hasStartedJourney && partyMembers.filter(m => m.type === 'cat' && m.health >= 90).length === 3;
+      case 'cat-nap-king':
+        return achievementStats.restCount >= 5;
+
+      // Minigame achievements
+      case 'karaoke-star':
+        return achievementStats.karaokeSRanks >= 1;
+      case 'singing-sensation':
+        return achievementStats.karaokeSongsPlayed >= 5;
+      case 'theater-legend':
+        return achievementStats.theaterPerfectShows >= 1;
+      case 'dancing-queen':
+        return achievementStats.danceHighScore >= 1000;
+      case 'master-chef':
+        return achievementStats.cookingRecipesCompleted >= 6;
+      case 'foraging-expert':
+        return achievementStats.foragingTotalFood >= 500;
+      case 'combo-master':
+        return achievementStats.maxCombo >= 20;
+      case 'rhythm-king':
+        return achievementStats.dancePerfectNotes >= 50;
+
+      // Secret achievements
       case 'googly-discoverer':
         return googlyEyesMode;
-      case 'mac-attack':
-        return true; // Mac is always doing something
-      case 'happy-family':
-        return partyMembers.filter(m => m.type === 'cat' && m.health >= 90).length === 3;
+      case 'oregon-duck-fan':
+        return achievementStats.foundDuckBlessing;
+      case 'mtg-collector':
+        return achievementStats.foundMTGBooster;
+      case 'mikes-best-customer':
+        return achievementStats.disneyCharactersMet.includes('mike');
+      case 'theater-kid':
+        return achievementStats.foundTheaterReference;
+      case 'disney-superfan':
+        return achievementStats.disneyCharactersMet.length >= 10;
+      case 'christmas-miracle':
+        return achievementStats.foundLoveNote;
+      case 'wagon-clicker':
+        return googlyEyesMode; // Unlocked by clicking wagon 10 times
+
+      // Challenge achievements
+      case 'speed-runner':
+        return hasCompletedGame && day < 100;
+      case 'no-cat-left-behind':
+        return hasCompletedGame && partyMembers.filter(m => m.type === 'cat' && m.health === 100).length === 3;
+      case 'wealthy-wanderer':
+        return hasCompletedGame && useGameStore.getState().resources.goldCoins >= 500;
+      case 'resourceful':
+        return hasCompletedGame && !achievementStats.ranOutOfFood;
+      case 'steady-pace':
+        return hasCompletedGame && !achievementStats.usedGruelingPace;
+      case 'memory-keeper':
+        return currentLandmarkIndex >= LANDMARKS.length - 1; // Visited all landmarks
+      case 'completionist':
+        return false; // Would need to check all other achievements
+      case 'perfect-journey':
+        return hasCompletedGame &&
+          partyMembers.filter(m => m.type === 'cat' && m.isAlive).length === 3 &&
+          achievementStats.karaokeSRanks >= 1;
+
       default:
         return false;
     }

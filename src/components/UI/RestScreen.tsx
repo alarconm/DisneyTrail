@@ -24,7 +24,7 @@ const CONSTELLATION_FACTS = [
 
 export default function RestScreen() {
   const {
-    setScreen, advanceDay, resources, updateResources, partyMembers, updatePartyMember
+    setScreen, advanceDay, resources, updateResources, partyMembers, updatePartyMember, incrementAchievementStat
   } = useGameStore();
   const [activity, setActivity] = useState<'menu' | 'story' | 'stargaze' | 'heal' | 'repair'>('menu');
   const [currentStory, setCurrentStory] = useState('');
@@ -49,6 +49,8 @@ export default function RestScreen() {
       }
     });
     advanceDay();
+    // Track rest count for achievements
+    incrementAchievementStat('restCount');
     playSound('success');
     setMessage("Everyone rested well! +15 health for all cats.");
     setTimeout(() => setMessage(''), 3000);
