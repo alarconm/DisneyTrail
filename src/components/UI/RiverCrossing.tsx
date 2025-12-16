@@ -28,8 +28,8 @@ export default function RiverCrossing() {
     },
     {
       id: 'caulk-and-float',
-      label: 'Caulk Wagon & Float',
-      description: 'Seal the wagon and float across',
+      label: 'Waterproof & Float',
+      description: 'Seal the truck bed and float across',
       risk: 'Medium risk - Hope it floats!',
     },
     {
@@ -81,7 +81,7 @@ export default function RiverCrossing() {
             const foodLost = Math.floor(Math.random() * 30) + 20;
             result = {
               success: false,
-              message: 'The wagon tipped! You lost some supplies and the cats are VERY upset.',
+              message: 'The truck tipped! You lost some supplies and the cats are VERY upset.',
               foodLost,
             };
             updateResources({ food: Math.max(0, resources.food - foodLost) });
@@ -98,7 +98,7 @@ export default function RiverCrossing() {
           if (Math.random() < 0.6) {
             result = {
               success: true,
-              message: 'The wagon floats! Mac looks terrified but Minestrone thinks this is the best day ever.',
+              message: 'The truck floats! Mac looks terrified but Minestrone thinks this is the best day ever.',
             };
           } else {
             const foodLost = Math.floor(Math.random() * 20) + 10;

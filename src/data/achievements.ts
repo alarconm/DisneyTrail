@@ -241,9 +241,9 @@ export const ACHIEVEMENTS: Achievement[] = [
     category: 'secret',
   },
   {
-    id: 'wagon-clicker',
-    name: 'Wagon Clicker',
-    description: 'Click the wagon 10 times',
+    id: 'truck-clicker',
+    name: 'Truck Clicker',
+    description: 'Click the truck 10 times',
     emoji: '🛻',
     category: 'secret',
   },

@@ -272,7 +272,7 @@ export default function ForagingMiniGame() {
                 onClick={handleFinish}
                 className="px-6 py-3 bg-prairie-green hover:bg-green-700 text-white rounded-lg text-sm md:text-base"
               >
-                Take to Wagon 🛻
+                Take to Truck 🛻
               </button>
             </div>
           </div>

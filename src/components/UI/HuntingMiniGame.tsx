@@ -289,7 +289,7 @@ export default function HuntingMiniGame() {
                 onClick={handleFinish}
                 className="px-6 py-2 bg-prairie-green hover:bg-green-700 text-white rounded"
               >
-                Take to Wagon
+                Take to Truck
               </button>
             </div>
           </div>

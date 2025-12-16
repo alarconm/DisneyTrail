@@ -13,8 +13,8 @@ export default function GameOverScreen() {
     causeOfDeath = 'The party ran out of food.';
   } else if (survivingCats.length === 0) {
     causeOfDeath = 'All the cats have perished.';
-  } else if (resources.wagonWheels <= 0) {
-    causeOfDeath = 'The wagon can no longer move.';
+  } else if (resources.spareTires <= 0) {
+    causeOfDeath = 'The truck broke down and cannot be repaired.';
   }
 
   const handleTryAgain = () => {

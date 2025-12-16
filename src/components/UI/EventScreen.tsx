@@ -178,7 +178,7 @@ export default function EventScreen() {
                     {effect.resource === 'catTreats' && '🐟 Cat Treats'}
                     {effect.resource === 'goldCoins' && '💰 Gold'}
                     {effect.resource === 'pixieDust' && '✨ Pixie Dust'}
-                    {effect.resource === 'wagonWheels' && '🛞 Wagon Wheel'}
+                    {effect.resource === 'spareTires' && '🛞 Spare Tire'}
                     {effect.resource === 'firstAidKits' && '🩹 First Aid'}
                   </>
                 )}

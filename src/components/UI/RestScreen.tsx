@@ -102,14 +102,14 @@ export default function RestScreen() {
   const handleRepair = () => {
     playSound('click');
     // Check if we have parts to repair
-    if (resources.wagonWheels <= 1 && resources.wagonAxles <= 0) {
+    if (resources.spareTires <= 1 && resources.engineParts <= 0) {
       playSound('error');
       setMessage("No spare parts to use for repairs!");
       setTimeout(() => setMessage(''), 3000);
       return;
     }
 
-    setMessage("The wagon is in good shape! Mac supervised the inspection by napping nearby.");
+    setMessage("The truck is in good shape! Mac supervised the inspection by napping nearby.");
     setTimeout(() => setMessage(''), 3000);
   };
 
@@ -222,8 +222,8 @@ export default function RestScreen() {
             className="p-4 bg-amber-900/50 hover:bg-amber-900/70 rounded-lg border border-amber-500/30 transition-all"
           >
             <span className="text-2xl block mb-1">🔧</span>
-            <span className="text-white text-sm">Check Wagon</span>
-            <span className="text-white/50 text-xs block">{resources.wagonWheels} wheels</span>
+            <span className="text-white text-sm">Check Truck</span>
+            <span className="text-white/50 text-xs block">{resources.spareTires} spare tires</span>
           </button>
 
           <button

@@ -48,7 +48,7 @@ interface GameActions {
   clearEvent: () => void;
 
   // Easter eggs
-  incrementWagonClick: () => void;
+  incrementTruckClick: () => void;
   toggleGooglyEyes: () => void;
 
   // Game state
@@ -86,7 +86,7 @@ const initialState: GameState = {
   rations: 'filling',
   weather: 'sunny',
   googlyEyesMode: false,
-  wagonClickCount: 0,
+  truckClickCount: 0,
   currentEvent: null,
   // Achievement tracking
   achievementStats: { ...DEFAULT_ACHIEVEMENT_STATS },
@@ -291,15 +291,15 @@ export const useGameStore = create<GameState & GameActions>()(
 
       clearEvent: () => set({ currentEvent: null, currentScreen: 'travel' }),
 
-      incrementWagonClick: () => {
+      incrementTruckClick: () => {
         const state = get();
-        const newCount = state.wagonClickCount + 1;
+        const newCount = state.truckClickCount + 1;
 
         // Easter egg: 10 rapid clicks activates googly eyes!
         if (newCount >= 10 && !state.googlyEyesMode) {
-          set({ wagonClickCount: 0, googlyEyesMode: true });
+          set({ truckClickCount: 0, googlyEyesMode: true });
         } else {
-          set({ wagonClickCount: newCount });
+          set({ truckClickCount: newCount });
         }
       },
 

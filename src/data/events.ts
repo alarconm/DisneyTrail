@@ -5,7 +5,7 @@ export const GOOD_EVENTS: GameEvent[] = [
   {
     id: 'tinkerbell-pixiedust',
     title: 'Tinker Bell Appears!',
-    description: 'A tiny glow appears beside the wagon. Tinker Bell sprinkles her magical pixie dust over your party! Everything feels more magical.',
+    description: 'A tiny glow appears beside the truck. Tinker Bell sprinkles her magical pixie dust over your party! Everything feels more magical.',
     type: 'good',
     effects: [{ type: 'resource', resource: 'pixieDust', amount: 20 }],
     disneyCharacter: 'tinkerbell',
@@ -110,9 +110,9 @@ export const GOOD_EVENTS: GameEvent[] = [
   {
     id: 'extra-wheel',
     title: 'Roadside Discovery',
-    description: 'You find an abandoned wagon wheel in excellent condition! Someone\'s loss is your gain. Mac tries to roll it. It does not go well.',
+    description: 'You find a spare tire in excellent condition! Someone\'s loss is your gain. Mac tries to roll it. It does not go well.',
     type: 'good',
-    effects: [{ type: 'resource', resource: 'wagonWheels', amount: 1 }],
+    effects: [{ type: 'resource', resource: 'spareTires', amount: 1 }],
   },
   {
     id: 'remy-visit',
@@ -125,7 +125,7 @@ export const GOOD_EVENTS: GameEvent[] = [
   {
     id: 'pascal-camouflage',
     title: 'Pascal\'s Help',
-    description: 'A small chameleon changes colors to match your wagon! Pascal is helping you blend in. Minestrone is fascinated and tries to catch him.',
+    description: 'A small chameleon changes colors to match your truck! Pascal is helping you blend in. Minestrone is fascinated and tries to catch him.',
     type: 'good',
     effects: [{ type: 'morale', amount: 10 }],
     disneyCharacter: 'pascal',
@@ -133,7 +133,7 @@ export const GOOD_EVENTS: GameEvent[] = [
   {
     id: 'maximus-guard',
     title: 'Royal Guard',
-    description: 'Maximus the horse trots alongside your wagon for protection! He keeps giving Mac suspicious looks though.',
+    description: 'Maximus the horse trots alongside your truck for protection! He keeps giving Mac suspicious looks though.',
     type: 'good',
     effects: [{ type: 'morale', amount: 25 }],
     disneyCharacter: 'maximus',
@@ -275,9 +275,9 @@ export const GOOD_EVENTS: GameEvent[] = [
   {
     id: 'free-repairs',
     title: 'Helpful Mechanic',
-    description: 'A retired wagon mechanic offers free repairs! "Been fixing these for 40 years," they say. The wagon runs smoother than ever.',
+    description: 'A retired mechanic offers free repairs! "Been fixing these for 40 years," they say. The truck runs smoother than ever.',
     type: 'good',
-    effects: [{ type: 'resource', resource: 'wagonWheels', amount: 1 }],
+    effects: [{ type: 'resource', resource: 'spareTires', amount: 1 }],
   },
   {
     id: 'starry-night',
@@ -303,7 +303,7 @@ export const GOOD_EVENTS: GameEvent[] = [
   {
     id: 'tailwind',
     title: 'Helpful Wind',
-    description: 'A strong tailwind pushes the wagon along! You make excellent time. The cats\' ears blow back dramatically.',
+    description: 'A strong tailwind pushes the truck along! You make excellent time. The cats\' ears blow back dramatically.',
     type: 'good',
     effects: [{ type: 'morale', amount: 10 }],
   },
@@ -406,11 +406,11 @@ export const GOOD_EVENTS: GameEvent[] = [
     effects: [{ type: 'morale', amount: 20 }],
   },
   {
-    id: 'wagon-upgrade',
+    id: 'truck-upgrade',
     title: 'Free Upgrade',
-    description: 'A retired wagon builder admires your rig and offers free upgrades! "She\'s a beauty - let me tune her up."',
+    description: 'A retired mechanic admires your rig and offers free upgrades! "She\'s a beauty - let me tune her up."',
     type: 'good',
-    effects: [{ type: 'resource', resource: 'wagonWheels', amount: 2 }],
+    effects: [{ type: 'resource', resource: 'spareTires', amount: 2 }],
   },
   {
     id: 'healing-herbs',
@@ -459,10 +459,10 @@ export const BAD_EVENTS: GameEvent[] = [
   },
   {
     id: 'mac-wheel',
-    title: 'Mac vs. Wagon',
-    description: 'Mac accidentally sat on a wagon wheel. Mac is fine and unbothered. The wheel... significantly less so. He\'s very sorry (he is not).',
+    title: 'Mac vs. Tire',
+    description: 'Mac accidentally sat on a spare tire. Mac is fine and unbothered. The tire... significantly less so. He\'s very sorry (he is not).',
     type: 'bad',
-    effects: [{ type: 'resource', resource: 'wagonWheels', amount: -1 }],
+    effects: [{ type: 'resource', resource: 'spareTires', amount: -1 }],
   },
   {
     id: 'stitch-chaos',
@@ -482,14 +482,14 @@ export const BAD_EVENTS: GameEvent[] = [
   {
     id: 'traffic-jam',
     title: 'Modern Problems',
-    description: 'You have encountered... a traffic jam on I-40. In a wagon. In fantasy Oregon Trail. Some things transcend time and space.',
+    description: 'You have encountered... a traffic jam on I-40. Some things transcend time and space. The cats are not amused.',
     type: 'bad',
     effects: [{ type: 'time', amount: 2 }],
   },
   {
     id: 'pothole',
     title: 'Road Hazard!',
-    description: 'The wagon hits a massive pothole! Everything rattles violently. Mac thinks it was an earthquake. Marge is profoundly unamused.',
+    description: 'The truck hits a massive pothole! Everything rattles violently. Mac thinks it was an earthquake. Marge is profoundly unamused.',
     type: 'bad',
     effects: [{ type: 'morale', amount: -10 }],
   },
@@ -503,7 +503,7 @@ export const BAD_EVENTS: GameEvent[] = [
   {
     id: 'cat-fight',
     title: 'Sibling Rivalry',
-    description: 'Minestrone and Mac got into a tiff over the sunny spot in the wagon. Marge had to break it up with her Mom Energy. Party morale decreased.',
+    description: 'Minestrone and Mac got into a tiff over the sunny spot in the truck. Marge had to break it up with her Mom Energy. Party morale decreased.',
     type: 'bad',
     effects: [{ type: 'morale', amount: -15 }],
   },
@@ -515,9 +515,9 @@ export const BAD_EVENTS: GameEvent[] = [
     effects: [{ type: 'time', amount: 1 }],
   },
   {
-    id: 'wagon-squeak',
+    id: 'truck-squeak',
     title: 'Annoying Squeak',
-    description: 'The wagon has developed an annoying squeak. It\'s driving everyone crazy. Minestrone keeps attacking the source. It does not help.',
+    description: 'The truck has developed an annoying squeak. It\'s driving everyone crazy. Minestrone keeps attacking the source. It does not help.',
     type: 'bad',
     effects: [{ type: 'morale', amount: -5 }],
   },
@@ -531,7 +531,7 @@ export const BAD_EVENTS: GameEvent[] = [
   {
     id: 'minestrone-zoomies',
     title: 'THE ZOOMIES',
-    description: 'Minestrone has the zoomies. AT 3AM. She\'s running laps around the wagon at impossible speeds. Nobody is sleeping tonight.',
+    description: 'Minestrone has the zoomies. AT 3AM. She\'s running laps around the truck at impossible speeds. Nobody is sleeping tonight.',
     type: 'bad',
     effects: [{ type: 'health', target: 'all', amount: -5 }],
   },
@@ -581,14 +581,14 @@ export const BAD_EVENTS: GameEvent[] = [
   {
     id: 'muddy-trail',
     title: 'Mud Everywhere',
-    description: 'Rain turned the trail to mud! The wagon gets stuck. Mac\'s paws are filthy. Marge is FURIOUS about her fur.',
+    description: 'Rain turned the trail to mud! The truck gets stuck. Mac\'s paws are filthy. Marge is FURIOUS about her fur.',
     type: 'bad',
     effects: [{ type: 'time', amount: 1 }, { type: 'morale', amount: -10 }],
   },
   {
     id: 'minestrone-escape',
     title: 'Escape Artist',
-    description: 'Minestrone escaped from the wagon! You spend two hours finding her. She was three feet away, hiding under a rock.',
+    description: 'Minestrone escaped from the truck! You spend two hours finding her. She was three feet away, hiding under a rock.',
     type: 'bad',
     effects: [{ type: 'time', amount: 1 }],
   },
@@ -616,7 +616,7 @@ export const BAD_EVENTS: GameEvent[] = [
   {
     id: 'broken-axle',
     title: 'Axle Trouble',
-    description: 'The wagon axle is showing wear! You spend time on makeshift repairs. Mac supervised by napping nearby.',
+    description: 'The truck engine is making a weird sound! You spend time on makeshift repairs. Mac supervised by napping nearby.',
     type: 'bad',
     effects: [{ type: 'time', amount: 1 }],
   },
@@ -658,7 +658,7 @@ export const BAD_EVENTS: GameEvent[] = [
   {
     id: 'scary-dog',
     title: 'Dog Encounter',
-    description: 'A dog barks at the wagon! All three cats puff up to twice their size. Marge hisses. The dog retreats. Morale is shaken.',
+    description: 'A dog barks at the truck! All three cats puff up to twice their size. Marge hisses. The dog retreats. Morale is shaken.',
     type: 'bad',
     effects: [{ type: 'morale', amount: -15 }],
   },
@@ -693,7 +693,7 @@ export const BAD_EVENTS: GameEvent[] = [
   {
     id: 'rocky-road',
     title: 'Bumpy Trail',
-    description: 'The trail is incredibly rocky! Every bump jostles the wagon. Mac gets bounced right off his nap spot.',
+    description: 'The trail is incredibly rocky! Every bump jostles the truck. Mac gets bounced right off his nap spot.',
     type: 'bad',
     effects: [{ type: 'morale', amount: -10 }],
   },
@@ -770,14 +770,14 @@ export const BAD_EVENTS: GameEvent[] = [
   {
     id: 'lost-supplies',
     title: 'Lost Supplies',
-    description: 'Some supplies fell out of the wagon! You don\'t notice until later. Classic road trip moment. Less classic: the lost food.',
+    description: 'Some supplies fell out of the truck! You don\'t notice until later. Classic road trip moment. Less classic: the lost food.',
     type: 'bad',
     effects: [{ type: 'resource', resource: 'food', amount: -20 }],
   },
   {
     id: 'rough-terrain',
     title: 'Rough Road',
-    description: 'The terrain is brutal! Rocks, ruts, and roots everywhere. The wagon creaks ominously. The cats cling on for dear life.',
+    description: 'The terrain is brutal! Rocks, ruts, and roots everywhere. The truck rattles ominously. The cats cling on for dear life.',
     type: 'bad',
     effects: [{ type: 'morale', amount: -10 }, { type: 'health', target: 'all', amount: -5 }],
   },
@@ -805,14 +805,14 @@ export const BAD_EVENTS: GameEvent[] = [
   {
     id: 'mac-got-out',
     title: 'Escape Artist Mac',
-    description: 'Mac somehow escaped the wagon! He didn\'t go far - he was under it the whole time. But the panic! The searching!',
+    description: 'Mac somehow escaped the truck! He didn\'t go far - he was under it the whole time. But the panic! The searching!',
     type: 'bad',
     effects: [{ type: 'time', amount: 1 }],
   },
   {
     id: 'skunked',
     title: 'Skunk Encounter',
-    description: 'A skunk sprayed near the wagon! Nobody got hit directly but the smell... oh, the smell. The cats are OFFENDED.',
+    description: 'A skunk sprayed near the truck! Nobody got hit directly but the smell... oh, the smell. The cats are OFFENDED.',
     type: 'bad',
     effects: [{ type: 'morale', amount: -20 }],
   },
@@ -825,15 +825,15 @@ export const BAD_EVENTS: GameEvent[] = [
   },
   {
     id: 'flat-tire',
-    title: 'Wheel Wobble',
-    description: 'A wagon wheel is loose! It takes time to fix. Mac "helps" by sitting on the tools. Thanks, Mac.',
+    title: 'Flat Tire',
+    description: 'A tire is going flat! It takes time to fix. Mac "helps" by sitting on the tools. Thanks, Mac.',
     type: 'bad',
     effects: [{ type: 'time', amount: 1 }],
   },
   {
     id: 'hail-storm',
     title: 'Hail!',
-    description: 'A sudden hailstorm! Small but painful ice pellets ping off the wagon. The cats hide under every available blanket.',
+    description: 'A sudden hailstorm! Small but painful ice pellets ping off the truck. The cats hide under every available blanket.',
     type: 'bad',
     effects: [{ type: 'time', amount: 1 }, { type: 'morale', amount: -10 }],
   },
@@ -879,7 +879,7 @@ export const SPECIAL_EVENTS: GameEvent[] = [
   {
     id: 'baymax-healing',
     title: 'Healthcare Companion',
-    description: 'Baymax waddles over to your wagon. "Hello. I am Baymax, your personal healthcare companion. On a scale of 1 to 10, how would you rate your pain?"',
+    description: 'Baymax waddles over to your truck. "Hello. I am Baymax, your personal healthcare companion. On a scale of 1 to 10, how would you rate your pain?"',
     type: 'special',
     effects: [{ type: 'health', target: 'all', amount: 25 }],
     disneyCharacter: 'baymax',
@@ -895,9 +895,9 @@ export const SPECIAL_EVENTS: GameEvent[] = [
   {
     id: 'goofy-repair',
     title: 'Goofy to the Rescue!',
-    description: 'Goofy appears with a toolbox! "Gawrsh, looks like you need some help!" He fixes your wagon... mostly. "A-hyuck! Good as new!"',
+    description: 'Goofy appears with a toolbox! "Gawrsh, looks like you need some help!" He fixes your truck... mostly. "A-hyuck! Good as new!"',
     type: 'special',
-    effects: [{ type: 'resource', resource: 'wagonWheels', amount: 1 }],
+    effects: [{ type: 'resource', resource: 'spareTires', amount: 1 }],
     disneyCharacter: 'goofy',
   },
   {
@@ -910,7 +910,7 @@ export const SPECIAL_EVENTS: GameEvent[] = [
   {
     id: 'olaf-cheer',
     title: 'Warm Hugs!',
-    description: 'Olaf waddles up to the wagon! "Hi! I\'m Olaf and I like warm hugs!" He seems perfectly fine despite the heat. His happiness is contagious!',
+    description: 'Olaf waddles up to the truck! "Hi! I\'m Olaf and I like warm hugs!" He seems perfectly fine despite the heat. His happiness is contagious!',
     type: 'special',
     effects: [{ type: 'morale', amount: 35 }],
     disneyCharacter: 'olaf',
@@ -971,7 +971,7 @@ export const SPECIAL_EVENTS: GameEvent[] = [
     title: 'Directive: Help!',
     description: 'WALL-E rolls up with EVE! He shows off his collection of interesting treasures. EVE scans the cats suspiciously. They find some useful supplies!',
     type: 'special',
-    effects: [{ type: 'resource', resource: 'wagonWheels', amount: 1 }, { type: 'morale', amount: 15 }],
+    effects: [{ type: 'resource', resource: 'spareTires', amount: 1 }, { type: 'morale', amount: 15 }],
     disneyCharacter: 'wall-e',
   },
   {

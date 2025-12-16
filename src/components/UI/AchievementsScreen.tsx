@@ -86,8 +86,8 @@ export default function AchievementsScreen() {
         return achievementStats.disneyCharactersMet.length >= 10;
       case 'christmas-miracle':
         return achievementStats.foundLoveNote;
-      case 'wagon-clicker':
-        return googlyEyesMode; // Unlocked by clicking wagon 10 times
+      case 'truck-clicker':
+        return googlyEyesMode; // Unlocked by clicking truck 10 times
 
       // Challenge achievements
       case 'speed-runner':

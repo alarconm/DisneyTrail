@@ -35,7 +35,7 @@ export default function TravelScreen() {
     pace, rations, weather,
     setPace, setRations, setWeather,
     advanceDay, travel, consumeDailyResources, triggerEvent,
-    setScreen, incrementWagonClick,
+    setScreen, incrementTruckClick,
     cloudSaveGame, lastCloudSave,
   } = useGameStore();
 
@@ -141,14 +141,14 @@ export default function TravelScreen() {
 
   // Stop moving when certain conditions are met
   useEffect(() => {
-    if (resources.food <= 0 || resources.wagonWheels <= 0) {
+    if (resources.food <= 0 || resources.spareTires <= 0) {
       setIsMoving(false);
       setStatusMessage('Cannot continue! Check your supplies.');
     }
-  }, [resources.food, resources.wagonWheels]);
+  }, [resources.food, resources.spareTires]);
 
-  const handleWagonClick = () => {
-    incrementWagonClick();
+  const handleTruckClick = () => {
+    incrementTruckClick();
   };
 
   const getSkyGradient = () => {
@@ -316,14 +316,14 @@ export default function TravelScreen() {
         </div>
       </div>
 
-      {/* Trail and wagon */}
+      {/* Trail and truck */}
       <div className="relative h-20 md:h-24 bg-[#228B22]">
         {/* Trail */}
         <div className="absolute bottom-6 md:bottom-8 left-0 right-0 h-3 md:h-4 bg-trail-brown/60" />
 
-        {/* Wagon */}
+        {/* Truck */}
         <button
-          onClick={handleWagonClick}
+          onClick={handleTruckClick}
           className={`absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 text-4xl md:text-5xl transition-transform ${
             isMoving ? 'animate-bounce' : ''
           }`}
@@ -332,7 +332,7 @@ export default function TravelScreen() {
           🛻
         </button>
 
-        {/* Cats in wagon */}
+        {/* Cats in truck */}
         <div className="absolute bottom-10 md:bottom-12 left-1/2 translate-x-2 md:translate-x-4 flex gap-0.5 md:gap-1">
           {partyMembers.filter(m => m.isAlive).slice(0, 3).map((member) => (
             <div key={member.id} className={isMoving ? 'animate-pulse' : ''}>

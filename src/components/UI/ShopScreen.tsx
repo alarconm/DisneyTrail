@@ -14,9 +14,9 @@ interface ShopItem {
 const SHOP_ITEMS: ShopItem[] = [
   { id: 'food', name: 'Food (10 lbs)', price: 5, emoji: '🥫', description: 'Essential for survival' },
   { id: 'catTreats', name: 'Cat Treats (5)', price: 3, emoji: '🐟', description: 'Keeps the cats happy' },
-  { id: 'wagonWheels', name: 'Wagon Wheel', price: 25, emoji: '🛞', description: 'Spare wheel for emergencies' },
-  { id: 'wagonAxles', name: 'Wagon Axle', price: 35, emoji: '🔧', description: 'Critical repair part' },
-  { id: 'wagonTongues', name: 'Wagon Tongue', price: 30, emoji: '🪵', description: 'Connects wagon to team' },
+  { id: 'spareTires', name: 'Spare Tire', price: 25, emoji: '🛞', description: 'For flat tire emergencies' },
+  { id: 'engineParts', name: 'Engine Parts', price: 35, emoji: '🔧', description: 'Critical repair parts' },
+  { id: 'toolkits', name: 'Toolkit', price: 30, emoji: '🧰', description: 'For roadside repairs' },
   { id: 'firstAidKits', name: 'First Aid Kit', price: 20, emoji: '🩹', description: 'Heals illness and injury' },
 ];
 
@@ -81,9 +81,9 @@ export default function ShopScreen() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
           <div className="text-white/70">🥫 Food: {resources.food} lbs</div>
           <div className="text-white/70">🐟 Treats: {resources.catTreats}</div>
-          <div className="text-white/70">🛞 Wheels: {resources.wagonWheels}</div>
-          <div className="text-white/70">🔧 Axles: {resources.wagonAxles}</div>
-          <div className="text-white/70">🪵 Tongues: {resources.wagonTongues}</div>
+          <div className="text-white/70">🛞 Tires: {resources.spareTires}</div>
+          <div className="text-white/70">🔧 Parts: {resources.engineParts}</div>
+          <div className="text-white/70">🧰 Tools: {resources.toolkits}</div>
           <div className="text-white/70">🩹 First Aid: {resources.firstAidKits}</div>
           <div className="text-white/70">✨ Pixie Dust: {resources.pixieDust}</div>
         </div>

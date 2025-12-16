@@ -195,7 +195,7 @@ function getMemoryForLandmark(landmarkId: string, _index: number): Memory {
       id: 'tigard',
       landmark: name,
       title: 'The Adventure Begins!',
-      description: 'We loaded up the wagon in Tigard. Mike waved goodbye from ORB Trading Cards. The cats had no idea what was coming!',
+      description: 'We loaded up the truck in Tigard. Mike waved goodbye from ORB Trading Cards. The cats had no idea what was coming!',
       emoji: '🏠',
       characters: ['marge', 'minestrone', 'mac'],
     },

@@ -114,9 +114,9 @@ export type Illness =
 export interface Resources {
   food: number;
   catTreats: number;
-  wagonWheels: number;
-  wagonAxles: number;
-  wagonTongues: number;
+  spareTires: number;
+  engineParts: number;
+  toolkits: number;
   pixieDust: number;
   goldCoins: number;
   firstAidKits: number;
@@ -263,7 +263,7 @@ export interface GameState {
 
   // Special states
   googlyEyesMode: boolean;
-  wagonClickCount: number;
+  truckClickCount: number;
 
   // Current event
   currentEvent: GameEvent | null;
@@ -281,9 +281,9 @@ export interface GameState {
 export const DEFAULT_RESOURCES: Resources = {
   food: 200,
   catTreats: 50,
-  wagonWheels: 3,
-  wagonAxles: 2,
-  wagonTongues: 1,
+  spareTires: 3,
+  engineParts: 2,
+  toolkits: 1,
   pixieDust: 0,
   goldCoins: 400, // varies by profession
   firstAidKits: 3,
