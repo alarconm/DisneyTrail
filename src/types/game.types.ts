@@ -120,6 +120,7 @@ export interface Resources {
   pixieDust: number;
   goldCoins: number;
   firstAidKits: number;
+  foragingBaskets: number; // Consumable for foraging minigame
 }
 
 export interface Landmark {
@@ -128,7 +129,9 @@ export interface Landmark {
   description: string;
   distanceFromStart: number; // in miles
   hasShop: boolean;
-  hasRiver: boolean;
+  hasRiver: boolean; // Legacy - keeping for compatibility
+  hasAttraction?: boolean; // New roadside attraction system
+  attractionId?: string; // ID of the attraction at this landmark
   specialEvent?: string;
   shopkeeperSprite?: string;
 }
@@ -138,6 +141,22 @@ export type Weather = 'sunny' | 'cloudy' | 'rainy' | 'snowy' | 'hot';
 export type TravelPace = 'steady' | 'strenuous' | 'grueling' | 'resting';
 
 export type RationLevel = 'filling' | 'meager' | 'bare-bones';
+
+export type Difficulty = 'easy' | 'challenging';
+
+// Roadside Attraction (replaces river crossings)
+export interface RoadsideAttraction {
+  id: string;
+  name: string;
+  emoji: string;
+  description: string;
+  visitCost: number; // gold coins
+  visitTime: number; // days
+  visitMoraleBoost: number;
+  skipMoralePenalty: number;
+  specialReward?: { resource: keyof Resources; amount: number };
+  catReaction: string; // Fun description of how cats react
+}
 
 export interface GameEvent {
   id: string;
@@ -237,6 +256,9 @@ export interface GameState {
   // Current screen
   currentScreen: GameScreen;
 
+  // Game settings
+  difficulty: Difficulty;
+
   // Game progress
   isStarted: boolean;
   isPaused: boolean;
@@ -287,6 +309,7 @@ export const DEFAULT_RESOURCES: Resources = {
   pixieDust: 0,
   goldCoins: 400, // varies by profession
   firstAidKits: 3,
+  foragingBaskets: 5, // Start with some baskets for foraging
 };
 
 export const DEFAULT_PARTY: PartyMember[] = [

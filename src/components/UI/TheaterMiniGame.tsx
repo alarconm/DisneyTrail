@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { playSound } from '../../services/audio';
 
@@ -238,15 +238,27 @@ export default function TheaterMiniGame() {
     setScreen('travel');
   };
 
-  // Get shuffled emotions including the correct one
-  const getEmotionOptions = () => {
+  // Memoize emotion options so they don't change on wrong answers
+  // Only recalculate when the script or line index changes
+  const emotionOptions = useMemo(() => {
     if (!currentScript) return [];
     const correct = currentScript.correctEmotions[currentLineIndex];
-    const others = ALL_EMOTIONS.filter((e) => e !== correct)
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 5);
-    return [...others, correct].sort(() => Math.random() - 0.5);
-  };
+    // Create a seeded shuffle based on the line to ensure consistency
+    const others = ALL_EMOTIONS.filter((e) => e !== correct);
+    // Shuffle using a simple but consistent method for this line
+    const shuffled = [...others].sort((a, b) => {
+      const hashA = a.charCodeAt(0) + currentLineIndex * 7 + scenesCompleted * 13;
+      const hashB = b.charCodeAt(0) + currentLineIndex * 7 + scenesCompleted * 13;
+      return (hashA % 17) - (hashB % 17);
+    }).slice(0, 5);
+    // Add correct answer and shuffle the final options
+    const options = [...shuffled, correct].sort((a, b) => {
+      const hashA = a.charCodeAt(0) + currentLineIndex * 11;
+      const hashB = b.charCodeAt(0) + currentLineIndex * 11;
+      return (hashA % 13) - (hashB % 13);
+    });
+    return options;
+  }, [currentScript, currentLineIndex, scenesCompleted]);
 
   return (
     <div className="bg-gradient-to-b from-[#2d1b1b] via-[#1a1a2e] to-[#1a1a2e] rounded-lg p-4 shadow-2xl border-4 border-magic-gold overflow-hidden relative">
@@ -312,9 +324,12 @@ export default function TheaterMiniGame() {
               </div>
             </div>
 
-            {/* Instruction */}
-            <p className="text-center text-white/60 text-sm mb-4">
+            {/* Instruction with emotion hint */}
+            <p className="text-center text-white/60 text-sm mb-2">
               Choose the right emotion for this line:
+            </p>
+            <p className="text-center text-magic-gold text-sm mb-4 font-semibold">
+              The character should feel: <span className="italic">{currentScript.lines[currentLineIndex].emotion}</span>
             </p>
 
             {/* Selected emotions so far */}
@@ -327,11 +342,11 @@ export default function TheaterMiniGame() {
             )}
           </div>
 
-          {/* Emotion choices */}
+          {/* Emotion choices - uses memoized options that don't change on wrong answers */}
           <div className="grid grid-cols-3 md:grid-cols-6 gap-2 mb-4">
-            {getEmotionOptions().map((emotion, i) => (
+            {emotionOptions.map((emotion) => (
               <button
-                key={i}
+                key={`${currentLineIndex}-${emotion}`}
                 onClick={() => handleEmotionSelect(emotion)}
                 className={`text-3xl p-3 rounded-lg transition-all ${
                   feedback === 'correct' && currentScript.correctEmotions[currentLineIndex] === emotion

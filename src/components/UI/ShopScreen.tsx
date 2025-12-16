@@ -14,6 +14,7 @@ interface ShopItem {
 const SHOP_ITEMS: ShopItem[] = [
   { id: 'food', name: 'Food (10 lbs)', price: 5, emoji: '🥫', description: 'Essential for survival' },
   { id: 'catTreats', name: 'Cat Treats (5)', price: 3, emoji: '🐟', description: 'Keeps the cats happy' },
+  { id: 'foragingBaskets', name: 'Foraging Basket', price: 8, emoji: '🧺', description: 'Required for foraging trips' },
   { id: 'spareTires', name: 'Spare Tire', price: 25, emoji: '🛞', description: 'For flat tire emergencies' },
   { id: 'engineParts', name: 'Engine Parts', price: 35, emoji: '🔧', description: 'Critical repair parts' },
   { id: 'toolkits', name: 'Toolkit', price: 30, emoji: '🧰', description: 'For roadside repairs' },
@@ -32,6 +33,7 @@ export default function ShopScreen() {
     }
 
     playSound('coin');
+    // Different items have different quantities per purchase
     const amount = item.id === 'food' ? 10 : item.id === 'catTreats' ? 5 : 1;
     updateResources({
       goldCoins: resources.goldCoins - item.price,
@@ -81,6 +83,7 @@ export default function ShopScreen() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
           <div className="text-white/70">🥫 Food: {resources.food} lbs</div>
           <div className="text-white/70">🐟 Treats: {resources.catTreats}</div>
+          <div className="text-white/70">🧺 Baskets: {resources.foragingBaskets}</div>
           <div className="text-white/70">🛞 Tires: {resources.spareTires}</div>
           <div className="text-white/70">🔧 Parts: {resources.engineParts}</div>
           <div className="text-white/70">🧰 Tools: {resources.toolkits}</div>

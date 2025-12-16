@@ -1,9 +1,15 @@
+import { useState } from 'react';
 import { useGameStore } from '../../stores/gameStore';
-import { LANDMARKS } from '../../data/landmarks';
+import { LANDMARKS, ROADSIDE_ATTRACTIONS } from '../../data/landmarks';
+import { LANDMARK_EVENTS } from '../../data/landmarkEvents';
 import { playSound } from '../../services/audio';
+import RoadsideAttraction from './RoadsideAttraction';
 
 export default function LandmarkScreen() {
-  const { currentLandmarkIndex, setScreen, distanceTraveled } = useGameStore();
+  const { currentLandmarkIndex, setScreen, distanceTraveled, triggerEvent } = useGameStore();
+  const [showAttraction, setShowAttraction] = useState(false);
+  const [attractionVisited, setAttractionVisited] = useState(false);
+  const [specialEventTriggered, setSpecialEventTriggered] = useState(false);
 
   const landmark = LANDMARKS[currentLandmarkIndex];
   const nextLandmark = LANDMARKS[currentLandmarkIndex + 1];
@@ -29,10 +35,41 @@ export default function LandmarkScreen() {
     setScreen('shop');
   };
 
-  const handleRiverCrossing = () => {
+  const handleAttraction = () => {
     playSound('click');
-    setScreen('river-crossing');
+    setShowAttraction(true);
   };
+
+  const handleAttractionComplete = () => {
+    setShowAttraction(false);
+    setAttractionVisited(true);
+  };
+
+  const handleSpecialEvent = () => {
+    if (landmark.specialEvent && LANDMARK_EVENTS[landmark.specialEvent]) {
+      playSound('notification');
+      triggerEvent(LANDMARK_EVENTS[landmark.specialEvent]);
+      setSpecialEventTriggered(true);
+    }
+  };
+
+  // Get attraction if this landmark has one
+  const attraction = landmark.hasAttraction && landmark.attractionId
+    ? ROADSIDE_ATTRACTIONS[landmark.attractionId]
+    : null;
+
+  // Get special event if this landmark has one
+  const specialEvent = landmark.specialEvent ? LANDMARK_EVENTS[landmark.specialEvent] : null;
+
+  // Show attraction screen if triggered
+  if (showAttraction && attraction && landmark.attractionId) {
+    return (
+      <RoadsideAttraction
+        attractionId={landmark.attractionId}
+        onComplete={handleAttractionComplete}
+      />
+    );
+  }
 
   return (
     <div className="bg-gradient-to-b from-[#1a1a2e] via-[#16213e] to-[#0f3460] rounded-lg p-6 shadow-2xl border-4 border-magic-gold">
@@ -60,8 +97,10 @@ export default function LandmarkScreen() {
         {landmark.id === 'salt-lake-city' && (
           <div className="absolute inset-0 bg-gradient-to-t from-yellow-200/50 to-transparent" />
         )}
-        {landmark.hasRiver && (
-          <div className="absolute inset-x-0 bottom-0 h-8 bg-blue-500/60" />
+        {attraction && (
+          <div className="absolute top-2 right-2 text-2xl animate-bounce">
+            {attraction.emoji}
+          </div>
         )}
         {/* Landmark marker */}
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-3xl">
@@ -89,6 +128,23 @@ export default function LandmarkScreen() {
 
       {/* Action buttons */}
       <div className="space-y-2">
+        {/* Special event button */}
+        {specialEvent && !specialEventTriggered && (
+          <button
+            onClick={handleSpecialEvent}
+            className="w-full py-3 bg-gradient-to-r from-magic-gold to-yellow-500 hover:from-yellow-500 hover:to-magic-gold text-[#1a1a2e] font-bold rounded-lg transition-colors flex items-center justify-center gap-2 animate-pulse"
+          >
+            <span>🌟</span>
+            <span>Special Encounter!</span>
+          </button>
+        )}
+
+        {specialEvent && specialEventTriggered && (
+          <div className="w-full py-3 bg-magic-gold/20 text-magic-gold/70 rounded-lg text-center text-sm border border-magic-gold/30">
+            🌟 Special encounter completed
+          </div>
+        )}
+
         {landmark.hasShop && (
           <button
             onClick={handleShop}
@@ -99,14 +155,20 @@ export default function LandmarkScreen() {
           </button>
         )}
 
-        {landmark.hasRiver && (
+        {attraction && !attractionVisited && (
           <button
-            onClick={handleRiverCrossing}
-            className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center justify-center gap-2"
+            onClick={handleAttraction}
+            className="w-full py-3 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-lg transition-colors flex items-center justify-center gap-2 animate-pulse"
           >
-            <span>🌊</span>
-            <span>Cross the River</span>
+            <span>{attraction.emoji}</span>
+            <span>Visit {attraction.name}!</span>
           </button>
+        )}
+
+        {attraction && attractionVisited && (
+          <div className="w-full py-3 bg-white/10 text-white/60 rounded-lg text-center text-sm">
+            {attraction.emoji} Already visited {attraction.name}
+          </div>
         )}
 
         <button

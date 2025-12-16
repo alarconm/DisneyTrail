@@ -43,7 +43,19 @@ export default function ForagingMiniGame() {
   const [combo, setCombo] = useState(0);
   const [message, setMessage] = useState('');
   const [catchStreak, setCatchStreak] = useState(0);
+  const [gameStarted, setGameStarted] = useState(false);
   const gameAreaRef = useRef<HTMLDivElement>(null);
+
+  // Check if player has baskets
+  const hasBaskets = resources.foragingBaskets > 0;
+
+  // Start foraging (consume a basket)
+  const startForaging = () => {
+    if (!hasBaskets) return;
+    playSound('click');
+    updateResources({ foragingBaskets: resources.foragingBaskets - 1 });
+    setGameStarted(true);
+  };
 
   const spawnItem = useCallback(() => {
     const isBonus = Math.random() < 0.1;
@@ -63,14 +75,14 @@ export default function ForagingMiniGame() {
 
   // Spawn items periodically
   useEffect(() => {
-    if (gameOver) return;
+    if (gameOver || !gameStarted) return;
     const interval = setInterval(spawnItem, 800);
     return () => clearInterval(interval);
-  }, [gameOver, spawnItem]);
+  }, [gameOver, gameStarted, spawnItem]);
 
   // Move items down and check for catches
   useEffect(() => {
-    if (gameOver) return;
+    if (gameOver || !gameStarted) return;
 
     const interval = setInterval(() => {
       setItems((prev) => {
@@ -116,11 +128,11 @@ export default function ForagingMiniGame() {
     }, 50);
 
     return () => clearInterval(interval);
-  }, [gameOver, basketX, combo]);
+  }, [gameOver, gameStarted, basketX, combo]);
 
   // Reset combo on miss
   useEffect(() => {
-    if (gameOver) return;
+    if (gameOver || !gameStarted) return;
 
     const checkMiss = setInterval(() => {
       setItems((prev) => {
@@ -134,11 +146,11 @@ export default function ForagingMiniGame() {
     }, 100);
 
     return () => clearInterval(checkMiss);
-  }, [gameOver]);
+  }, [gameOver, gameStarted]);
 
   // Timer
   useEffect(() => {
-    if (gameOver) return;
+    if (gameOver || !gameStarted) return;
 
     const interval = setInterval(() => {
       setTimeLeft((prev) => {
@@ -151,7 +163,7 @@ export default function ForagingMiniGame() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [gameOver]);
+  }, [gameOver, gameStarted]);
 
   // Clear messages
   useEffect(() => {
@@ -180,6 +192,72 @@ export default function ForagingMiniGame() {
     updateResources({ food: resources.food + score });
     setScreen('travel');
   };
+
+  // Pre-game screen - show basket requirement
+  if (!gameStarted) {
+    return (
+      <div className="bg-gradient-to-b from-[#1a1a2e] via-[#16213e] to-[#0f3460] rounded-lg p-4 shadow-2xl border-4 border-magic-gold">
+        <div className="text-center mb-6">
+          <h1 className="text-2xl md:text-3xl text-magic-gold mb-2">Foraging Time!</h1>
+          <p className="text-white/60 text-sm">Grab your basket and gather food!</p>
+        </div>
+
+        {/* Basket icon */}
+        <div className="text-center mb-6">
+          <span className="text-6xl inline-block">🧺</span>
+        </div>
+
+        {/* Basket count */}
+        <div className="bg-white/10 rounded-lg p-4 mb-6 text-center">
+          <p className="text-white mb-2">
+            Baskets available: <span className={`font-bold text-xl ${hasBaskets ? 'text-magic-gold' : 'text-red-400'}`}>
+              {resources.foragingBaskets}
+            </span>
+          </p>
+          <p className="text-white/50 text-xs">
+            Each foraging trip uses 1 basket. Buy more at shops!
+          </p>
+        </div>
+
+        {/* Timon & Pumbaa */}
+        <div className="flex items-center gap-2 mb-4 p-2 bg-white/5 rounded-lg">
+          <span className="text-2xl">🐗</span>
+          <p className="text-white text-xs flex-1">
+            {hasBaskets
+              ? '"Hakuna Matata! Let\'s find some grubs!"'
+              : '"No baskets? We need something to carry the food!"'}
+          </p>
+          <span className="text-2xl">🦡</span>
+        </div>
+
+        {/* Buttons */}
+        <div className="flex flex-col gap-3">
+          {hasBaskets ? (
+            <button
+              onClick={startForaging}
+              className="w-full py-3 bg-prairie-green hover:bg-green-700 text-white rounded-lg transition-colors font-bold"
+            >
+              🧺 Use a Basket & Start Foraging!
+            </button>
+          ) : (
+            <div className="text-center p-4 bg-red-500/20 rounded-lg text-red-300">
+              <p className="font-bold">No baskets available!</p>
+              <p className="text-sm mt-1">Visit a shop to buy more baskets.</p>
+            </div>
+          )}
+          <button
+            onClick={() => {
+              playSound('click');
+              setScreen('travel');
+            }}
+            className="w-full py-3 bg-trail-brown hover:bg-amber-800 text-white rounded-lg transition-colors"
+          >
+            Back to Trail
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gradient-to-b from-[#1a1a2e] via-[#16213e] to-[#0f3460] rounded-lg p-4 shadow-2xl border-4 border-magic-gold">
@@ -225,27 +303,29 @@ export default function ForagingMiniGame() {
         <div className="absolute top-8 right-8 text-2xl opacity-60">🌲</div>
         <div className="absolute top-4 left-1/2 text-2xl opacity-40">🌴</div>
 
-        {/* Falling items */}
+        {/* Falling items - no transition for smooth movement */}
         {items.map((item) => (
           <div
             key={item.id}
-            className="absolute text-2xl md:text-3xl transition-transform drop-shadow-lg"
+            className="absolute text-2xl md:text-3xl drop-shadow-lg"
             style={{
               left: `${item.x}%`,
               top: `${item.y}%`,
               transform: 'translate(-50%, -50%)',
+              willChange: 'top',
             }}
           >
             {item.emoji}
           </div>
         ))}
 
-        {/* Basket */}
+        {/* Basket - no transition to prevent jitter */}
         <div
-          className="absolute bottom-4 text-4xl md:text-5xl transition-all duration-75"
+          className="absolute bottom-4 text-4xl md:text-5xl"
           style={{
             left: `${basketX}%`,
             transform: 'translateX(-50%)',
+            willChange: 'left',
           }}
         >
           🧺

@@ -1055,23 +1055,346 @@ export const SPECIAL_EVENTS: GameEvent[] = [
   },
 ];
 
-export function getRandomEvent(): GameEvent {
+// Choice-based events - player decides outcome
+export const CHOICE_EVENTS: GameEvent[] = [
+  {
+    id: 'hitchhiker',
+    title: 'Mysterious Hitchhiker',
+    description: 'A friendly-looking traveler waves from the roadside, hoping for a ride. They offer to share resources in exchange.',
+    type: 'neutral',
+    effects: [],
+    choices: [
+      {
+        text: 'Pick them up',
+        effects: [{ type: 'resource', resource: 'goldCoins', amount: 30 }],
+      },
+      {
+        text: 'Drive past safely',
+        effects: [{ type: 'morale', amount: -5 }],
+      },
+    ],
+  },
+  {
+    id: 'shortcut-sign',
+    title: 'Shortcut Sign',
+    description: 'A weathered sign points to a "shortcut" through the woods. It looks overgrown but could save time...',
+    type: 'neutral',
+    effects: [],
+    choices: [
+      {
+        text: 'Take the shortcut',
+        effects: [{ type: 'morale', amount: 15 }],
+      },
+      {
+        text: 'Stay on the main road',
+        effects: [{ type: 'morale', amount: 5 }],
+      },
+    ],
+  },
+  {
+    id: 'roadside-stand',
+    title: 'Mysterious Vendor',
+    description: 'A strange vendor sells "mystery boxes" from a roadside stand. "Every box is a winner!" they claim. Minestrone is suspicious.',
+    type: 'neutral',
+    effects: [],
+    choices: [
+      {
+        text: 'Buy a mystery box ($20)',
+        effects: [{ type: 'resource', resource: 'pixieDust', amount: 10 }],
+        requiredResource: { resource: 'goldCoins', amount: 20 },
+      },
+      {
+        text: 'Keep your money',
+        effects: [],
+      },
+    ],
+  },
+  {
+    id: 'flat-tire-choice',
+    title: 'Flat Tire!',
+    description: 'The truck has a flat tire! You have a few options to deal with this...',
+    type: 'bad',
+    effects: [],
+    choices: [
+      {
+        text: 'Use a spare tire',
+        effects: [{ type: 'resource', resource: 'spareTires', amount: -1 }],
+        requiredResource: { resource: 'spareTires', amount: 1 },
+      },
+      {
+        text: 'Try to patch it (risky)',
+        effects: [{ type: 'time', amount: 1 }, { type: 'morale', amount: -10 }],
+      },
+      {
+        text: 'Call for help ($50)',
+        effects: [{ type: 'resource', resource: 'goldCoins', amount: -50 }],
+        requiredResource: { resource: 'goldCoins', amount: 50 },
+      },
+    ],
+  },
+  {
+    id: 'cat-cafe-stop',
+    title: 'Roadside Cat Cafe!',
+    description: 'A cute cat cafe appears! The cats are VERY interested. You could stop for treats and socializing, or press on.',
+    type: 'neutral',
+    effects: [],
+    choices: [
+      {
+        text: 'Stop at the cafe ($25)',
+        effects: [
+          { type: 'morale', amount: 30 },
+          { type: 'resource', resource: 'catTreats', amount: 10 },
+          { type: 'time', amount: 1 },
+        ],
+        requiredResource: { resource: 'goldCoins', amount: 25 },
+      },
+      {
+        text: 'Wave and keep driving',
+        effects: [{ type: 'morale', amount: -15 }],
+      },
+    ],
+  },
+  {
+    id: 'minestrone-escape-choice',
+    title: 'Minestrone Escaped!',
+    description: 'Minestrone has bolted from the truck! She\'s hiding somewhere nearby. You need to get her back!',
+    type: 'bad',
+    effects: [],
+    choices: [
+      {
+        text: 'Lure her with treats (5 treats)',
+        effects: [{ type: 'resource', resource: 'catTreats', amount: -5 }, { type: 'time', amount: 1 }],
+        requiredResource: { resource: 'catTreats', amount: 5 },
+      },
+      {
+        text: 'Wait patiently (takes longer)',
+        effects: [{ type: 'time', amount: 2 }],
+      },
+      {
+        text: 'Chase her down',
+        effects: [{ type: 'morale', amount: -20 }, { type: 'health', target: 'all', amount: -10 }],
+      },
+    ],
+  },
+  {
+    id: 'mac-carsick',
+    title: 'Mac is Carsick!',
+    description: 'Poor Mac is looking green. He\'s definitely motion sick. What do you do?',
+    type: 'bad',
+    effects: [],
+    choices: [
+      {
+        text: 'Rest for a day',
+        effects: [{ type: 'health', target: 'mac', amount: 20 }, { type: 'time', amount: 1 }],
+      },
+      {
+        text: 'Use first aid kit',
+        effects: [{ type: 'health', target: 'mac', amount: 15 }, { type: 'resource', resource: 'firstAidKits', amount: -1 }],
+        requiredResource: { resource: 'firstAidKits', amount: 1 },
+      },
+      {
+        text: 'Push through',
+        effects: [{ type: 'health', target: 'mac', amount: -15 }, { type: 'morale', amount: -10 }],
+      },
+    ],
+  },
+  {
+    id: 'marge-demands-break',
+    title: 'Marge Demands a Break',
+    description: 'Marge has stationed herself in front of the steering wheel. She is NOT moving until she gets a proper break. Mom has spoken.',
+    type: 'neutral',
+    effects: [],
+    choices: [
+      {
+        text: 'Stop at nice rest area ($15)',
+        effects: [{ type: 'morale', amount: 25 }, { type: 'resource', resource: 'goldCoins', amount: -15 }],
+        requiredResource: { resource: 'goldCoins', amount: 15 },
+      },
+      {
+        text: 'Take a roadside break',
+        effects: [{ type: 'morale', amount: 10 }, { type: 'time', amount: 1 }],
+      },
+      {
+        text: 'Try to negotiate (good luck)',
+        effects: [{ type: 'morale', amount: -20 }, { type: 'health', target: 'marge', amount: -5 }],
+      },
+    ],
+  },
+  {
+    id: 'trading-post',
+    title: 'Trading Post',
+    description: 'A friendly trading post offers various deals. What catches your eye?',
+    type: 'neutral',
+    effects: [],
+    choices: [
+      {
+        text: 'Trade gold for food ($30 for 50 food)',
+        effects: [{ type: 'resource', resource: 'food', amount: 50 }, { type: 'resource', resource: 'goldCoins', amount: -30 }],
+        requiredResource: { resource: 'goldCoins', amount: 30 },
+      },
+      {
+        text: 'Trade gold for treats ($20 for 15 treats)',
+        effects: [{ type: 'resource', resource: 'catTreats', amount: 15 }, { type: 'resource', resource: 'goldCoins', amount: -20 }],
+        requiredResource: { resource: 'goldCoins', amount: 20 },
+      },
+      {
+        text: 'Just browse and leave',
+        effects: [],
+      },
+    ],
+  },
+  {
+    id: 'broken-bridge',
+    title: 'Bridge Out!',
+    description: 'The bridge ahead is broken! You\'ll need to find another way across.',
+    type: 'bad',
+    effects: [],
+    choices: [
+      {
+        text: 'Build temporary bridge (costs parts)',
+        effects: [{ type: 'resource', resource: 'engineParts', amount: -1 }],
+        requiredResource: { resource: 'engineParts', amount: 1 },
+      },
+      {
+        text: 'Take the long way around',
+        effects: [{ type: 'time', amount: 2 }, { type: 'morale', amount: -10 }],
+      },
+      {
+        text: 'Use pixie dust to float across',
+        effects: [{ type: 'resource', resource: 'pixieDust', amount: -10 }, { type: 'morale', amount: 20 }],
+        requiredResource: { resource: 'pixieDust', amount: 10 },
+      },
+    ],
+  },
+  {
+    id: 'storm-approaching',
+    title: 'Storm Approaching!',
+    description: 'Dark clouds gather on the horizon. A big storm is coming. What\'s the plan?',
+    type: 'neutral',
+    effects: [],
+    choices: [
+      {
+        text: 'Find shelter and wait',
+        effects: [{ type: 'time', amount: 1 }, { type: 'health', target: 'all', amount: 10 }],
+      },
+      {
+        text: 'Try to outrun it',
+        effects: [{ type: 'morale', amount: 15 }],
+      },
+      {
+        text: 'Make camp and ride it out',
+        effects: [{ type: 'morale', amount: 5 }, { type: 'resource', resource: 'food', amount: -10 }],
+      },
+    ],
+  },
+  {
+    id: 'injured-animal',
+    title: 'Injured Animal',
+    description: 'You find an injured bird by the roadside. The cats are very interested (for different reasons).',
+    type: 'neutral',
+    effects: [],
+    choices: [
+      {
+        text: 'Help the bird (use first aid)',
+        effects: [{ type: 'morale', amount: 20 }, { type: 'resource', resource: 'firstAidKits', amount: -1 }],
+        requiredResource: { resource: 'firstAidKits', amount: 1 },
+      },
+      {
+        text: 'Leave it to nature',
+        effects: [{ type: 'morale', amount: -5 }],
+      },
+    ],
+  },
+  {
+    id: 'are-we-there-yet',
+    title: 'Are We There Yet?!',
+    description: 'The cats are restless! All three are meowing loudly and demanding entertainment. Morale is tanking fast!',
+    type: 'bad',
+    effects: [],
+    choices: [
+      {
+        text: 'Emergency treat distribution',
+        effects: [{ type: 'morale', amount: 25 }, { type: 'resource', resource: 'catTreats', amount: -10 }],
+        requiredResource: { resource: 'catTreats', amount: 10 },
+      },
+      {
+        text: 'Stop for playtime',
+        effects: [{ type: 'morale', amount: 20 }, { type: 'time', amount: 1 }],
+      },
+      {
+        text: 'Try to distract them with singing',
+        effects: [{ type: 'morale', amount: 10 }],
+      },
+    ],
+  },
+  {
+    id: 'antique-shop',
+    title: 'Antique Shop',
+    description: 'A charming antique shop catches your eye. They have some interesting items...',
+    type: 'neutral',
+    effects: [],
+    choices: [
+      {
+        text: 'Buy vintage toolkit ($40)',
+        effects: [{ type: 'resource', resource: 'toolkits', amount: 2 }, { type: 'resource', resource: 'goldCoins', amount: -40 }],
+        requiredResource: { resource: 'goldCoins', amount: 40 },
+      },
+      {
+        text: 'Buy mysterious vial ($25)',
+        effects: [{ type: 'resource', resource: 'pixieDust', amount: 15 }, { type: 'resource', resource: 'goldCoins', amount: -25 }],
+        requiredResource: { resource: 'goldCoins', amount: 25 },
+      },
+      {
+        text: 'Window shop only',
+        effects: [{ type: 'morale', amount: 5 }],
+      },
+    ],
+  },
+  {
+    id: 'fork-in-road',
+    title: 'Fork in the Road',
+    description: 'Two paths lie ahead. The scenic route looks beautiful but longer. The direct route looks faster but boring.',
+    type: 'neutral',
+    effects: [],
+    choices: [
+      {
+        text: 'Take the scenic route',
+        effects: [{ type: 'morale', amount: 20 }, { type: 'time', amount: 1 }],
+      },
+      {
+        text: 'Take the direct route',
+        effects: [{ type: 'morale', amount: -5 }],
+      },
+    ],
+  },
+];
+
+export function getRandomEvent(difficulty: 'easy' | 'challenging' = 'easy'): GameEvent {
   const rand = Math.random();
 
-  // 35% chance good, 35% chance bad, 30% chance special
-  if (rand < 0.35) {
+  // Difficulty affects event distribution
+  // Easy: 40% good, 30% bad/choice, 30% special
+  // Challenging: 25% good, 45% bad/choice, 30% special
+  const goodChance = difficulty === 'challenging' ? 0.25 : 0.40;
+  const badChance = difficulty === 'challenging' ? 0.70 : 0.70;
+
+  if (rand < goodChance) {
     return GOOD_EVENTS[Math.floor(Math.random() * GOOD_EVENTS.length)];
-  } else if (rand < 0.7) {
-    return BAD_EVENTS[Math.floor(Math.random() * BAD_EVENTS.length)];
+  } else if (rand < badChance) {
+    // Mix of bad events and choice events
+    const badAndChoice = [...BAD_EVENTS, ...CHOICE_EVENTS];
+    return badAndChoice[Math.floor(Math.random() * badAndChoice.length)];
   } else {
     return SPECIAL_EVENTS[Math.floor(Math.random() * SPECIAL_EVENTS.length)];
   }
 }
 
-export function shouldTriggerEvent(): boolean {
-  // 30% chance of event each day
-  return Math.random() < 0.3;
+export function shouldTriggerEvent(difficulty: 'easy' | 'challenging' = 'easy'): boolean {
+  // Easy: 30% chance of event each day
+  // Challenging: 40% chance of event each day
+  const chance = difficulty === 'challenging' ? 0.4 : 0.3;
+  return Math.random() < chance;
 }
 
-export const ALL_EVENTS = [...GOOD_EVENTS, ...BAD_EVENTS, ...SPECIAL_EVENTS];
+export const ALL_EVENTS = [...GOOD_EVENTS, ...BAD_EVENTS, ...SPECIAL_EVENTS, ...CHOICE_EVENTS];
 export const TOTAL_EVENTS = ALL_EVENTS.length;

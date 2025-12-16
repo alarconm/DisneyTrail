@@ -10,6 +10,7 @@ import {
   RationLevel,
   Weather,
   Profession,
+  Difficulty,
   AchievementStats,
   DEFAULT_RESOURCES,
   DEFAULT_PARTY,
@@ -24,7 +25,8 @@ interface GameActions {
   setScreen: (screen: GameScreen) => void;
 
   // Game setup
-  startNewGame: (playerName: string, profession: Profession) => void;
+  setDifficulty: (difficulty: Difficulty) => void;
+  startNewGame: (playerName: string, profession: Profession, difficulty: Difficulty) => void;
   resetGame: () => void;
 
   // Party management
@@ -69,6 +71,7 @@ interface GameActions {
 
 const initialState: GameState = {
   currentScreen: 'main-menu',
+  difficulty: 'easy',
   isStarted: false,
   isPaused: false,
   day: 1,
@@ -103,18 +106,25 @@ export const useGameStore = create<GameState & GameActions>()(
 
       setScreen: (screen) => set({ currentScreen: screen }),
 
-      startNewGame: (playerName, profession) => {
+      setDifficulty: (difficulty) => set({ difficulty }),
+
+      startNewGame: (playerName, profession, difficulty) => {
         const bonusGold = PROFESSION_BONUSES[profession].goldCoins;
+        // Challenging mode gives less starting resources
+        const resourceMultiplier = difficulty === 'challenging' ? 0.75 : 1;
         set({
           ...initialState,
           currentScreen: 'shop',
           isStarted: true,
+          difficulty,
           playerName,
           profession,
           partyMembers: [...DEFAULT_PARTY],
           resources: {
             ...DEFAULT_RESOURCES,
             goldCoins: bonusGold,
+            food: Math.floor(DEFAULT_RESOURCES.food * resourceMultiplier),
+            catTreats: Math.floor(DEFAULT_RESOURCES.catTreats * resourceMultiplier),
           },
           achievementStats: { ...DEFAULT_ACHIEVEMENT_STATS },
         });
@@ -144,12 +154,11 @@ export const useGameStore = create<GameState & GameActions>()(
         const aliveCats = state.partyMembers.filter((m) => m.type === 'cat' && m.isAlive);
         const aliveMembers = state.partyMembers.filter((m) => m.isAlive).length;
 
-        // Food consumption based on rations
-        const foodPerPerson: Record<RationLevel, number> = {
-          filling: 3,
-          meager: 2,
-          'bare-bones': 1,
-        };
+        // Food consumption based on rations AND difficulty
+        // Easy: 3/2/1, Challenging: 4/3/2
+        const foodPerPerson: Record<RationLevel, number> = state.difficulty === 'challenging'
+          ? { filling: 4, meager: 3, 'bare-bones': 2 }
+          : { filling: 3, meager: 2, 'bare-bones': 1 };
         const dailyFood = aliveMembers * foodPerPerson[state.rations];
 
         // Cat treats - cats need their treats!
@@ -359,6 +368,7 @@ export const useGameStore = create<GameState & GameActions>()(
 
         const gameState: CloudSaveState = {
           isStarted: state.isStarted,
+          difficulty: state.difficulty,
           day: state.day,
           month: state.month,
           year: state.year,
@@ -397,6 +407,7 @@ export const useGameStore = create<GameState & GameActions>()(
           set({
             currentScreen: 'travel',
             isStarted: gs.isStarted,
+            difficulty: (gs.difficulty as Difficulty) || 'easy',
             day: gs.day,
             month: gs.month,
             year: gs.year,
@@ -428,6 +439,7 @@ export const useGameStore = create<GameState & GameActions>()(
       partialize: (state) => ({
         // Only persist game state, not UI state
         isStarted: state.isStarted,
+        difficulty: state.difficulty,
         day: state.day,
         month: state.month,
         year: state.year,

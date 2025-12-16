@@ -1,17 +1,36 @@
 import { useState } from 'react';
 import { useGameStore } from '../../stores/gameStore';
-import { Profession, PROFESSION_BONUSES } from '../../types/game.types';
+import { Profession, Difficulty, PROFESSION_BONUSES } from '../../types/game.types';
 import { playSound } from '../../services/audio';
 import TabbyCat from '../sprites/TabbyCat';
+
+const DIFFICULTY_INFO: Record<Difficulty, { name: string; description: string; emoji: string }> = {
+  easy: {
+    name: 'Easy',
+    description: 'Relaxed journey with forgiving resource consumption and friendly events',
+    emoji: '🌸',
+  },
+  challenging: {
+    name: 'Challenging',
+    description: 'Higher resource consumption, harsher events, and game over if morale hits 0',
+    emoji: '🔥',
+  },
+};
 
 export default function PartySetup() {
   const { startNewGame } = useGameStore();
   const [playerName, setPlayerName] = useState('Kristin');
   const [profession, setProfession] = useState<Profession>('actress');
+  const [difficulty, setDifficulty] = useState<Difficulty>('easy');
 
   const handleStart = () => {
     playSound('success');
-    startNewGame(playerName, profession);
+    startNewGame(playerName, profession, difficulty);
+  };
+
+  const handleDifficultySelect = (diff: Difficulty) => {
+    playSound('click');
+    setDifficulty(diff);
   };
 
   const handleProfessionSelect = (prof: Profession) => {
@@ -67,6 +86,35 @@ export default function PartySetup() {
               </div>
               <div className="text-xs mt-1 opacity-70">
                 Starting Gold: {PROFESSION_BONUSES[prof].goldCoins} coins
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Difficulty selection */}
+      <div className="mb-6">
+        <label className="block text-white text-sm mb-2">
+          Choose Difficulty:
+        </label>
+        <div className="grid grid-cols-2 gap-2">
+          {(['easy', 'challenging'] as Difficulty[]).map((diff) => (
+            <button
+              key={diff}
+              onClick={() => handleDifficultySelect(diff)}
+              className={`p-3 rounded border-2 text-left transition-all ${
+                difficulty === diff
+                  ? diff === 'easy'
+                    ? 'border-prairie-green bg-prairie-green/20 text-prairie-green'
+                    : 'border-cat-orange bg-cat-orange/20 text-cat-orange'
+                  : 'border-white/20 text-white/70 hover:border-white/40'
+              }`}
+            >
+              <div className="text-sm font-bold">
+                {DIFFICULTY_INFO[diff].emoji} {DIFFICULTY_INFO[diff].name}
+              </div>
+              <div className="text-xs mt-1 opacity-70">
+                {DIFFICULTY_INFO[diff].description}
               </div>
             </button>
           ))}

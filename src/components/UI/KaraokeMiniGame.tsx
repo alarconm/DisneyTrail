@@ -32,11 +32,10 @@ export default function KaraokeMiniGame() {
     return selectedSong.lyrics[currentLineIndex] || null;
   }, [selectedSong, currentLineIndex]);
 
-  // Start the game
+  // Start the game - set song first, then state changes via effect
   const startGame = (song: KaraokeSong) => {
     playSound('click');
-    setSelectedSong(song);
-    setGameState('playing');
+    // Reset all game state first
     setCurrentTime(0);
     setScore(0);
     setCombo(0);
@@ -52,7 +51,19 @@ export default function KaraokeMiniGame() {
     if (song.lyrics[0]) {
       setBeatPositions(song.lyrics[0].beats);
     }
+
+    // Set song and state together - React 18 should batch these
+    setSelectedSong(song);
+    setGameState('playing');
   };
+
+  // Fallback: If somehow we're in 'playing' state without a song, go back to select
+  useEffect(() => {
+    if (gameState === 'playing' && !selectedSong) {
+      // This shouldn't happen with React 18 batching, but just in case
+      setGameState('select');
+    }
+  }, [gameState, selectedSong]);
 
   // Game loop
   useEffect(() => {
@@ -176,7 +187,7 @@ export default function KaraokeMiniGame() {
   }, [handleSing]);
 
   // Calculate final grade
-  const getGrade = () => {
+  const getGrade = useCallback(() => {
     const totalBeats = perfectHits + goodHits + missedHits;
     if (totalBeats === 0) return 'C';
     const accuracy = ((perfectHits * 100 + goodHits * 50) / (totalBeats * 100)) * 100;
@@ -185,10 +196,51 @@ export default function KaraokeMiniGame() {
     if (accuracy >= 70) return 'B';
     if (accuracy >= 50) return 'C';
     return 'D';
-  };
+  }, [perfectHits, goodHits, missedHits]);
 
-  // Song selection screen
-  if (gameState === 'select') {
+  // Track achievements and give rewards when game ends
+  // IMPORTANT: This must be before any conditional returns to follow Rules of Hooks
+  useEffect(() => {
+    if (gameState === 'results') {
+      const grade = getGrade();
+
+      // Track songs played
+      incrementAchievementStat('karaokeSongsPlayed');
+
+      // Track S ranks
+      if (grade === 'S') {
+        incrementAchievementStat('karaokeSRanks');
+      }
+
+      // Update max combo if higher
+      if (maxCombo > achievementStats.maxCombo) {
+        updateAchievementStats({ maxCombo });
+      }
+
+      // Update high score
+      if (score > achievementStats.karaokeHighScore) {
+        updateAchievementStats({ karaokeHighScore: score });
+      }
+
+      // Award pixie dust based on grade - singing is magical!
+      const pixieDustRewards: Record<string, number> = { 'S': 20, 'A': 12, 'B': 8, 'C': 4, 'D': 2 };
+      const pixieDustReward = pixieDustRewards[grade] || 0;
+      if (pixieDustReward > 0) {
+        updateResources({ pixieDust: resources.pixieDust + pixieDustReward });
+      }
+
+      // Bonus gold for S rank performances
+      if (grade === 'S') {
+        updateResources({ goldCoins: resources.goldCoins + 25 });
+      }
+    }
+  }, [gameState, getGrade, maxCombo, score, achievementStats, incrementAchievementStat, updateAchievementStats, updateResources, resources]);
+
+  // Song selection screen - also show if playing but song not loaded yet
+  if (gameState === 'select' || (gameState === 'playing' && !selectedSong)) {
+    // Safety check for songs data
+    const songs = KARAOKE_SONGS || [];
+
     return (
       <div className="bg-gradient-to-b from-[#1a1a2e] via-[#2d1b4e] to-[#1a1a2e] rounded-lg p-4 md:p-6 shadow-2xl border-4 border-magic-gold">
         <div className="text-center mb-6">
@@ -203,7 +255,11 @@ export default function KaraokeMiniGame() {
 
         {/* Song list */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6 max-h-[400px] overflow-y-auto">
-          {KARAOKE_SONGS.map((song) => (
+          {songs.length === 0 ? (
+            <div className="col-span-2 text-center text-white/60 p-4">
+              <p>Loading songs...</p>
+            </div>
+          ) : songs.map((song) => (
             <button
               key={song.id}
               onClick={() => startGame(song)}
@@ -243,43 +299,6 @@ export default function KaraokeMiniGame() {
       </div>
     );
   }
-
-  // Track achievements and give rewards when game ends
-  useEffect(() => {
-    if (gameState === 'results') {
-      const grade = getGrade();
-
-      // Track songs played
-      incrementAchievementStat('karaokeSongsPlayed');
-
-      // Track S ranks
-      if (grade === 'S') {
-        incrementAchievementStat('karaokeSRanks');
-      }
-
-      // Update max combo if higher
-      if (maxCombo > achievementStats.maxCombo) {
-        updateAchievementStats({ maxCombo });
-      }
-
-      // Update high score
-      if (score > achievementStats.karaokeHighScore) {
-        updateAchievementStats({ karaokeHighScore: score });
-      }
-
-      // Award pixie dust based on grade - singing is magical!
-      const pixieDustRewards: Record<string, number> = { 'S': 20, 'A': 12, 'B': 8, 'C': 4, 'D': 2 };
-      const pixieDustReward = pixieDustRewards[grade] || 0;
-      if (pixieDustReward > 0) {
-        updateResources({ pixieDust: resources.pixieDust + pixieDustReward });
-      }
-
-      // Bonus gold for S rank performances
-      if (grade === 'S') {
-        updateResources({ goldCoins: resources.goldCoins + 25 });
-      }
-    }
-  }, [gameState]);
 
   // Results screen
   if (gameState === 'results') {

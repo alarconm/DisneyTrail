@@ -6,6 +6,7 @@ const API_BASE = import.meta.env.PROD
 
 export interface CloudSaveState {
   isStarted: boolean;
+  difficulty?: string;
   day: number;
   month: number;
   year: number;

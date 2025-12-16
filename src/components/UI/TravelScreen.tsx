@@ -4,6 +4,7 @@ import { LANDMARKS, TOTAL_DISTANCE } from '../../data/landmarks';
 import { getRandomEvent, shouldTriggerEvent } from '../../data/events';
 import { TravelPace, RationLevel, Weather } from '../../types/game.types';
 import TabbyCat from '../sprites/TabbyCat';
+import HelpGuide from './HelpGuide';
 import { playSound } from '../../services/audio';
 
 const PACE_MILES: Record<TravelPace, number> = {
@@ -32,7 +33,7 @@ export default function TravelScreen() {
     distanceTraveled, distanceToNextLandmark,
     currentLandmarkIndex,
     resources, partyMembers, morale,
-    pace, rations, weather,
+    pace, rations, weather, difficulty,
     setPace, setRations, setWeather,
     advanceDay, travel, consumeDailyResources, triggerEvent,
     setScreen, incrementTruckClick,
@@ -44,6 +45,7 @@ export default function TravelScreen() {
   const [timeOfDay, setTimeOfDay] = useState<'day' | 'sunset' | 'night'>('day');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [showMenu, setShowMenu] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
   const lastSaveDay = useRef(day);
 
   const nextLandmark = LANDMARKS[currentLandmarkIndex + 1];
@@ -110,9 +112,9 @@ export default function TravelScreen() {
     consumeDailyResources();
     advanceDay();
 
-    // Check for random events
-    if (shouldTriggerEvent()) {
-      const event = getRandomEvent();
+    // Check for random events - difficulty affects event chance and type distribution
+    if (shouldTriggerEvent(difficulty)) {
+      const event = getRandomEvent(difficulty);
       playSound('notification');
       triggerEvent(event);
       return;
@@ -185,6 +187,9 @@ export default function TravelScreen() {
 
   return (
     <div className="bg-gradient-to-b from-[#1a1a2e] to-[#0f3460] rounded-lg shadow-2xl border-4 border-trail-brown overflow-hidden relative">
+      {/* Help Guide Modal */}
+      {showHelp && <HelpGuide onClose={() => setShowHelp(false)} />}
+
       {/* Menu Modal */}
       {showMenu && (
         <div className="absolute inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
@@ -234,14 +239,23 @@ export default function TravelScreen() {
 
       {/* Sky and landscape */}
       <div className={`relative h-28 md:h-36 bg-gradient-to-b ${getSkyGradient()} transition-all duration-1000`}>
-        {/* Menu button */}
-        <button
-          onClick={() => { playSound('click'); setIsMoving(false); setShowMenu(true); }}
-          className="absolute top-2 left-2 z-10 p-2 bg-black/30 hover:bg-black/50 rounded-lg text-white text-lg transition-colors"
-          title="Menu"
-        >
-          ☰
-        </button>
+        {/* Menu and Help buttons */}
+        <div className="absolute top-2 left-2 z-10 flex gap-1">
+          <button
+            onClick={() => { playSound('click'); setIsMoving(false); setShowMenu(true); }}
+            className="p-2 bg-black/30 hover:bg-black/50 rounded-lg text-white text-lg transition-colors"
+            title="Menu"
+          >
+            ☰
+          </button>
+          <button
+            onClick={() => { playSound('click'); setShowHelp(true); }}
+            className="p-2 bg-black/30 hover:bg-black/50 rounded-lg text-white text-lg transition-colors"
+            title="Trail Guide"
+          >
+            ❓
+          </button>
+        </div>
 
         {/* Sun/Moon */}
         {timeOfDay === 'night' ? (

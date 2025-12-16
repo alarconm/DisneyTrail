@@ -1,3 +1,4 @@
+import { EventEffect } from '../../types/game.types';
 import { useGameStore } from '../../stores/gameStore';
 import { playSound } from '../../services/audio';
 
@@ -12,32 +13,73 @@ export default function EventScreen() {
     return null;
   }
 
-  const handleContinue = () => {
-    playSound('click');
+  // Helper function to apply effects
+  const applyEffects = (effects: EventEffect[]) => {
+    effects.forEach((effect) => {
+      switch (effect.type) {
+        case 'resource':
+          if (effect.resource) {
+            const currentValue = resources[effect.resource];
+            updateResources({
+              [effect.resource]: Math.max(0, currentValue + effect.amount),
+            });
+          }
+          break;
+        case 'health':
+          if (effect.target === 'all') {
+            partyMembers.forEach((member) => {
+              if (member.isAlive) {
+                updatePartyMember(member.id, {
+                  health: Math.min(100, Math.max(0, member.health + effect.amount)),
+                });
+              }
+            });
+          } else if (effect.target) {
+            const targetMember = partyMembers.find(
+              (m) => m.name.toLowerCase() === effect.target?.toLowerCase() || m.id === effect.target?.toLowerCase()
+            );
+            if (targetMember && targetMember.isAlive) {
+              updatePartyMember(targetMember.id, {
+                health: Math.min(100, Math.max(0, targetMember.health + effect.amount)),
+              });
+            }
+          }
+          break;
+        case 'morale':
+          updateMorale(effect.amount);
+          break;
+        case 'time':
+          for (let i = 0; i < Math.abs(effect.amount); i++) {
+            advanceDay();
+          }
+          break;
+      }
+    });
+  };
 
-    // Track Disney character encounters for achievements
+  // Track achievements for this event
+  const trackAchievements = () => {
     if (currentEvent.disneyCharacter) {
       addDisneyCharacterMet(currentEvent.disneyCharacter);
     }
 
-    // Track special event achievements
     switch (currentEvent.id) {
-      // Minestrone mischief events
       case 'minestrone-food-raid':
       case 'minestrone-zoomies':
       case 'minestrone-escape':
       case 'minestrone-trouble':
       case 'minestrone-sass':
       case 'minestrone-midnight':
+      case 'minestrone-escape-choice':
         incrementAchievementStat('minestroneEventsCount');
         break;
-      // Mac breaking things events
       case 'mac-wheel':
       case 'mac-ate-map':
       case 'mac-nap-spot':
       case 'mac-got-out':
       case 'mac-stuck':
       case 'mac-demands':
+      case 'mac-carsick':
         incrementAchievementStat('macBreaksCount');
         break;
       case 'mtg-booster':
@@ -56,55 +98,50 @@ export default function EventScreen() {
         addDisneyCharacterMet('mike');
         break;
     }
+  };
 
-    // Apply event effects
-    currentEvent.effects.forEach((effect) => {
-      switch (effect.type) {
-        case 'resource':
-          if (effect.resource) {
-            const currentValue = resources[effect.resource];
-            updateResources({
-              [effect.resource]: Math.max(0, currentValue + effect.amount),
-            });
-          }
-          break;
-        case 'health':
-          if (effect.target === 'all') {
-            // Apply to all party members
-            partyMembers.forEach((member) => {
-              if (member.isAlive) {
-                updatePartyMember(member.id, {
-                  health: Math.min(100, Math.max(0, member.health + effect.amount)),
-                });
-              }
-            });
-          } else if (effect.target) {
-            // Apply to specific cat by name (e.g., 'Mac', 'Marge', 'Minestrone')
-            const targetMember = partyMembers.find(
-              (m) => m.name.toLowerCase() === effect.target?.toLowerCase() || m.id === effect.target?.toLowerCase()
-            );
-            if (targetMember && targetMember.isAlive) {
-              updatePartyMember(targetMember.id, {
-                health: Math.min(100, Math.max(0, targetMember.health + effect.amount)),
-              });
-            }
-          }
-          break;
-        case 'morale':
-          // Apply morale changes
-          updateMorale(effect.amount);
-          break;
-        case 'time':
-          // Time loss advances days (positive = days lost)
-          for (let i = 0; i < Math.abs(effect.amount); i++) {
-            advanceDay();
-          }
-          break;
-      }
-    });
-
+  const handleContinue = () => {
+    playSound('click');
+    trackAchievements();
+    applyEffects(currentEvent.effects);
     clearEvent();
   };
+
+  const handleChoice = (choiceIndex: number) => {
+    if (!currentEvent.choices) return;
+
+    const choice = currentEvent.choices[choiceIndex];
+
+    // Check if player can afford required resource
+    if (choice.requiredResource) {
+      const currentAmount = resources[choice.requiredResource.resource] as number;
+      if (currentAmount < choice.requiredResource.amount) {
+        playSound('error');
+        return;
+      }
+      // Deduct the required resource cost
+      updateResources({
+        [choice.requiredResource.resource]: currentAmount - choice.requiredResource.amount,
+      });
+    }
+
+    playSound('success');
+    trackAchievements();
+    applyEffects(choice.effects);
+    clearEvent();
+  };
+
+  // Check if choice is affordable
+  const canAffordChoice = (choiceIndex: number): boolean => {
+    if (!currentEvent.choices) return true;
+    const choice = currentEvent.choices[choiceIndex];
+    if (!choice.requiredResource) return true;
+    const currentAmount = resources[choice.requiredResource.resource] as number;
+    return currentAmount >= choice.requiredResource.amount;
+  };
+
+  // Check if this is a choice-based event
+  const hasChoices = currentEvent.choices && currentEvent.choices.length > 0;
 
   const getEventTypeStyle = () => {
     switch (currentEvent.type) {
@@ -161,8 +198,8 @@ export default function EventScreen() {
         </p>
       </div>
 
-      {/* Effects summary */}
-      {currentEvent.effects.length > 0 && (
+      {/* Effects summary for non-choice events */}
+      {!hasChoices && currentEvent.effects.length > 0 && (
         <div className="mb-6 space-y-2">
           {currentEvent.effects.map((effect, index) => (
             <div
@@ -194,13 +231,72 @@ export default function EventScreen() {
         </div>
       )}
 
-      {/* Continue button */}
-      <button
-        onClick={handleContinue}
-        className="w-full py-4 bg-prairie-green hover:bg-green-700 text-white rounded-lg border-2 border-white/20 transition-all hover:scale-[1.02] text-lg"
-      >
-        Continue Journey
-      </button>
+      {/* Choice buttons for choice-based events */}
+      {hasChoices && currentEvent.choices && (
+        <div className="mb-6 space-y-3">
+          <p className="text-white/60 text-sm text-center mb-3">What do you do?</p>
+          {currentEvent.choices.map((choice, index) => {
+            const affordable = canAffordChoice(index);
+            return (
+              <button
+                key={index}
+                onClick={() => handleChoice(index)}
+                disabled={!affordable}
+                className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
+                  affordable
+                    ? 'border-magic-gold/50 bg-magic-gold/10 hover:bg-magic-gold/20 text-white'
+                    : 'border-gray-600 bg-gray-800/50 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                <div className="font-bold text-sm mb-1">{choice.text}</div>
+                {choice.requiredResource && (
+                  <div className={`text-xs mb-2 ${affordable ? 'text-magic-gold' : 'text-red-400'}`}>
+                    Requires: {choice.requiredResource.amount} {choice.requiredResource.resource}
+                    {!affordable && ' (Not enough!)'}
+                  </div>
+                )}
+                <div className="flex flex-wrap gap-2 text-xs">
+                  {choice.effects.map((effect, effectIndex) => (
+                    <span
+                      key={effectIndex}
+                      className={`px-2 py-1 rounded ${
+                        effect.amount > 0 ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                      }`}
+                    >
+                      {effect.type === 'resource' && effect.resource && (
+                        <>
+                          {effect.resource === 'food' && '🥫'}
+                          {effect.resource === 'catTreats' && '🐟'}
+                          {effect.resource === 'goldCoins' && '💰'}
+                          {effect.resource === 'pixieDust' && '✨'}
+                          {effect.resource === 'spareTires' && '🛞'}
+                          {effect.resource === 'firstAidKits' && '🩹'}
+                          {effect.resource === 'engineParts' && '⚙️'}
+                          {effect.resource === 'toolkits' && '🔧'}
+                        </>
+                      )}
+                      {effect.type === 'health' && '💖'}
+                      {effect.type === 'morale' && '😊'}
+                      {effect.type === 'time' && '⏰'}
+                      {' '}{effect.amount > 0 ? '+' : ''}{effect.amount}
+                    </span>
+                  ))}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Continue button for non-choice events */}
+      {!hasChoices && (
+        <button
+          onClick={handleContinue}
+          className="w-full py-4 bg-prairie-green hover:bg-green-700 text-white rounded-lg border-2 border-white/20 transition-all hover:scale-[1.02] text-lg"
+        >
+          Continue Journey
+        </button>
+      )}
     </div>
   );
 }

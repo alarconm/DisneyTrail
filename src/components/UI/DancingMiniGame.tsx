@@ -289,18 +289,48 @@ export default function DancingMiniGame() {
         )}
       </div>
 
-      {/* Touch controls for mobile */}
-      <div className="grid grid-cols-4 gap-2 md:hidden">
-        {DIRECTIONS.map((dir) => (
+      {/* Touch controls for mobile - Compass layout */}
+      <div className="md:hidden">
+        <div className="grid grid-cols-3 gap-2 max-w-[200px] mx-auto">
+          {/* Top row - Up button */}
+          <div></div>
           <button
-            key={dir}
-            onClick={() => handleKeyPress(dir)}
-            className="py-4 bg-white/10 active:bg-magic-gold/30 rounded-lg text-2xl transition-colors"
+            onClick={() => handleKeyPress('⬆️')}
+            className="py-4 bg-white/10 active:bg-magic-gold/30 rounded-lg text-2xl transition-colors border-2 border-white/20 active:border-magic-gold"
             disabled={gameOver}
           >
-            {dir}
+            ⬆️
           </button>
-        ))}
+          <div></div>
+
+          {/* Middle row - Left and Right buttons */}
+          <button
+            onClick={() => handleKeyPress('⬅️')}
+            className="py-4 bg-white/10 active:bg-magic-gold/30 rounded-lg text-2xl transition-colors border-2 border-white/20 active:border-magic-gold"
+            disabled={gameOver}
+          >
+            ⬅️
+          </button>
+          <div></div>
+          <button
+            onClick={() => handleKeyPress('➡️')}
+            className="py-4 bg-white/10 active:bg-magic-gold/30 rounded-lg text-2xl transition-colors border-2 border-white/20 active:border-magic-gold"
+            disabled={gameOver}
+          >
+            ➡️
+          </button>
+
+          {/* Bottom row - Down button */}
+          <div></div>
+          <button
+            onClick={() => handleKeyPress('⬇️')}
+            className="py-4 bg-white/10 active:bg-magic-gold/30 rounded-lg text-2xl transition-colors border-2 border-white/20 active:border-magic-gold"
+            disabled={gameOver}
+          >
+            ⬇️
+          </button>
+          <div></div>
+        </div>
       </div>
 
       {/* Desktop instructions */}
