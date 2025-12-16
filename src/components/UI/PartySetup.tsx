@@ -76,27 +76,27 @@ export default function PartySetup() {
       {/* Party members preview */}
       <div className="mb-6">
         <h2 className="text-white text-sm mb-3">Your Party:</h2>
-        <div className="grid grid-cols-3 gap-4">
-          <div className="text-center p-3 bg-white/5 rounded">
-            <div className="flex justify-center mb-2">
-              <TabbyCat variant="marge" size="md" mood="happy" />
+        <div className="grid grid-cols-3 gap-2 md:gap-4">
+          <div className="text-center p-2 md:p-3 bg-white/5 rounded overflow-hidden">
+            <div className="flex justify-center mb-1 md:mb-2">
+              <TabbyCat variant="marge" size="sm" mood="happy" />
             </div>
-            <p className="text-white text-xs">Marge</p>
-            <p className="text-white/50 text-xs">The Mom</p>
+            <p className="text-white text-[10px] md:text-xs truncate">Marge</p>
+            <p className="text-white/50 text-[8px] md:text-xs truncate">The Mom</p>
           </div>
-          <div className="text-center p-3 bg-white/5 rounded">
-            <div className="flex justify-center mb-2">
-              <TabbyCat variant="minestrone" size="md" mood="excited" />
+          <div className="text-center p-2 md:p-3 bg-white/5 rounded overflow-hidden">
+            <div className="flex justify-center mb-1 md:mb-2">
+              <TabbyCat variant="minestrone" size="sm" mood="excited" />
             </div>
-            <p className="text-white text-xs">Minestrone</p>
-            <p className="text-white/50 text-xs">Troublemaker</p>
+            <p className="text-white text-[10px] md:text-xs truncate">Minestrone</p>
+            <p className="text-white/50 text-[8px] md:text-xs truncate">Troublemaker</p>
           </div>
-          <div className="text-center p-3 bg-white/5 rounded">
-            <div className="flex justify-center mb-2">
-              <TabbyCat variant="mac" size="md" mood="happy" />
+          <div className="text-center p-2 md:p-3 bg-white/5 rounded overflow-hidden">
+            <div className="flex justify-center mb-1 md:mb-2">
+              <TabbyCat variant="mac" size="sm" mood="happy" />
             </div>
-            <p className="text-white text-xs">Mac</p>
-            <p className="text-white/50 text-xs">Big Oaf</p>
+            <p className="text-white text-[10px] md:text-xs truncate">Mac</p>
+            <p className="text-white/50 text-[8px] md:text-xs truncate">Big Oaf</p>
           </div>
         </div>
       </div>
