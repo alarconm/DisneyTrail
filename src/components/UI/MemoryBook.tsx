@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { LANDMARKS } from '../../data/landmarks';
 import TabbyCat from '../sprites/TabbyCat';
+import { playSound } from '../../services/audio';
 
 interface Memory {
   id: string;
@@ -47,7 +48,7 @@ export default function MemoryBook() {
       <div className="absolute top-2 right-8 w-16 h-6 bg-pink-200/60 rotate-[5deg] shadow-sm" />
 
       {/* Memory pages */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 min-h-[400px]">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 min-h-[250px] md:min-h-[400px]">
         {visibleMemories.length === 0 ? (
           <div className="col-span-2 flex flex-col items-center justify-center text-amber-700">
             <span className="text-6xl mb-4">📷</span>
@@ -104,7 +105,10 @@ export default function MemoryBook() {
       {memories.length > 0 && (
         <div className="flex justify-center items-center gap-4 mb-4">
           <button
-            onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
+            onClick={() => {
+              playSound('click');
+              setCurrentPage(p => Math.max(0, p - 1));
+            }}
             disabled={currentPage === 0}
             className="px-4 py-2 bg-amber-700 hover:bg-amber-800 disabled:bg-amber-400 text-white rounded-lg transition-colors disabled:cursor-not-allowed"
           >
@@ -114,7 +118,10 @@ export default function MemoryBook() {
             Page {currentPage + 1} of {totalPages}
           </span>
           <button
-            onClick={() => setCurrentPage(p => Math.min(totalPages - 1, p + 1))}
+            onClick={() => {
+              playSound('click');
+              setCurrentPage(p => Math.min(totalPages - 1, p + 1));
+            }}
             disabled={currentPage >= totalPages - 1}
             className="px-4 py-2 bg-amber-700 hover:bg-amber-800 disabled:bg-amber-400 text-white rounded-lg transition-colors disabled:cursor-not-allowed"
           >
@@ -162,7 +169,10 @@ export default function MemoryBook() {
 
       {/* Back button */}
       <button
-        onClick={() => setScreen('travel')}
+        onClick={() => {
+          playSound('click');
+          setScreen('travel');
+        }}
         className="w-full py-3 bg-amber-700 hover:bg-amber-800 text-white rounded-lg transition-colors"
       >
         Close Memory Book

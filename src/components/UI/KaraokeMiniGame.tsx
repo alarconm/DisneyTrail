@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { KARAOKE_SONGS, KaraokeSong, LyricLine } from '../../data/songs';
 import TabbyCat from '../sprites/TabbyCat';
+import { playSound } from '../../services/audio';
 
 type HitResult = 'perfect' | 'good' | 'miss' | null;
 
@@ -33,6 +34,7 @@ export default function KaraokeMiniGame() {
 
   // Start the game
   const startGame = (song: KaraokeSong) => {
+    playSound('click');
     setSelectedSong(song);
     setGameState('playing');
     setCurrentTime(0);
@@ -123,6 +125,7 @@ export default function KaraokeMiniGame() {
     if (closestDistance <= 8) {
       result = 'perfect';
       points = 100 * (1 + combo * 0.1);
+      playSound('success');
       setPerfectHits(prev => prev + 1);
       setCombo(prev => {
         const newCombo = prev + 1;
@@ -135,6 +138,7 @@ export default function KaraokeMiniGame() {
     } else if (closestDistance <= 20) {
       result = 'good';
       points = 50 * (1 + combo * 0.05);
+      playSound('coin');
       setGoodHits(prev => prev + 1);
       setCombo(prev => {
         const newCombo = prev + 1;
@@ -144,6 +148,7 @@ export default function KaraokeMiniGame() {
       setCatReaction('happy');
     } else {
       result = 'miss';
+      playSound('error');
       setCombo(0);
       setMissedHits(prev => prev + 1);
       setCatReaction('sleeping');
@@ -227,7 +232,10 @@ export default function KaraokeMiniGame() {
         </div>
 
         <button
-          onClick={() => setScreen('travel')}
+          onClick={() => {
+            playSound('click');
+            setScreen('travel');
+          }}
           className="w-full py-3 bg-trail-brown hover:bg-amber-800 text-white rounded-lg transition-colors"
         >
           Back to Trail
@@ -302,13 +310,19 @@ export default function KaraokeMiniGame() {
           {/* Buttons */}
           <div className="flex gap-3">
             <button
-              onClick={() => setGameState('select')}
+              onClick={() => {
+                playSound('click');
+                setGameState('select');
+              }}
               className="flex-1 py-3 bg-elsa-blue hover:bg-blue-400 text-white rounded-lg transition-colors"
             >
               Sing Another
             </button>
             <button
-              onClick={() => setScreen('travel')}
+              onClick={() => {
+                playSound('click');
+                setScreen('travel');
+              }}
               className="flex-1 py-3 bg-trail-brown hover:bg-amber-800 text-white rounded-lg transition-colors"
             >
               Back to Trail
@@ -447,8 +461,20 @@ export default function KaraokeMiniGame() {
         <p className="hidden md:block">Press SPACE or click to sing!</p>
       </div>
 
+      {/* Exit button */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          playSound('click');
+          setGameState('select');
+        }}
+        className="mt-3 w-full py-2 bg-white/10 hover:bg-white/20 text-white/70 rounded text-sm relative z-10"
+      >
+        ✕ Exit Song
+      </button>
+
       {/* Progress bar */}
-      <div className="mt-4 h-2 bg-white/10 rounded-full overflow-hidden">
+      <div className="mt-2 h-2 bg-white/10 rounded-full overflow-hidden">
         <div
           className="h-full bg-magic-gold transition-all"
           style={{

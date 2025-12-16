@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { Resources } from '../../types/game.types';
+import { playSound } from '../../services/audio';
 
 interface ShopItem {
   id: keyof Resources;
@@ -25,10 +26,12 @@ export default function ShopScreen() {
 
   const buyItem = (item: ShopItem) => {
     if (resources.goldCoins < item.price) {
+      playSound('error');
       setMessage("You don't have enough gold coins!");
       return;
     }
 
+    playSound('coin');
     const amount = item.id === 'food' ? 10 : item.id === 'catTreats' ? 5 : 1;
     updateResources({
       goldCoins: resources.goldCoins - item.price,
@@ -40,6 +43,7 @@ export default function ShopScreen() {
   };
 
   const handleContinue = () => {
+    playSound('click');
     setScreen('travel');
   };
 

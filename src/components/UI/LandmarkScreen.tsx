@@ -1,5 +1,6 @@
 import { useGameStore } from '../../stores/gameStore';
 import { LANDMARKS } from '../../data/landmarks';
+import { playSound } from '../../services/audio';
 
 export default function LandmarkScreen() {
   const { currentLandmarkIndex, setScreen, distanceTraveled } = useGameStore();
@@ -19,14 +20,17 @@ export default function LandmarkScreen() {
   }
 
   const handleContinue = () => {
+    playSound('click');
     setScreen('travel');
   };
 
   const handleShop = () => {
+    playSound('click');
     setScreen('shop');
   };
 
   const handleRiverCrossing = () => {
+    playSound('click');
     setScreen('river-crossing');
   };
 

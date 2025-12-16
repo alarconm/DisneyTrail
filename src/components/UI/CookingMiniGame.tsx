@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useGameStore } from '../../stores/gameStore';
+import { playSound } from '../../services/audio';
 
 interface Recipe {
   name: string;
@@ -34,22 +35,35 @@ export default function CookingMiniGame() {
 
   // Initialize game
   useEffect(() => {
-    selectNewRecipe();
-    shuffleIngredients();
+    const recipe = RECIPES[Math.floor(Math.random() * RECIPES.length)];
+    setCurrentRecipe(recipe);
+    shuffleIngredientsWithRecipe(recipe);
   }, []);
 
   const selectNewRecipe = () => {
     const recipe = RECIPES[Math.floor(Math.random() * RECIPES.length)];
     setCurrentRecipe(recipe);
     setSelectedIngredients([]);
+    shuffleIngredientsWithRecipe(recipe);
+  };
+
+  const shuffleIngredientsWithRecipe = (recipe: Recipe) => {
+    // MUST include recipe ingredients plus random extras
+    const recipeIngredients = recipe.ingredients;
+    const extras = ALL_INGREDIENTS
+      .filter(ing => !recipeIngredients.includes(ing))
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 8 - recipeIngredients.length);
+
+    // Combine and shuffle
+    const combined = [...recipeIngredients, ...extras];
+    setAvailableIngredients(combined.sort(() => Math.random() - 0.5));
   };
 
   const shuffleIngredients = () => {
-    // Include recipe ingredients plus random extras
-    const extras = ALL_INGREDIENTS
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 8);
-    setAvailableIngredients([...new Set(extras)].sort(() => Math.random() - 0.5));
+    if (currentRecipe) {
+      shuffleIngredientsWithRecipe(currentRecipe);
+    }
   };
 
   // Timer
@@ -71,6 +85,7 @@ export default function CookingMiniGame() {
 
   const handleIngredientClick = (ingredient: string) => {
     if (gameOver || !currentRecipe) return;
+    playSound('click');
 
     if (selectedIngredients.includes(ingredient)) {
       // Remove ingredient
@@ -83,12 +98,14 @@ export default function CookingMiniGame() {
 
   const handleCook = useCallback(() => {
     if (!currentRecipe || gameOver) return;
+    playSound('click');
 
     const isCorrect =
       selectedIngredients.length === currentRecipe.ingredients.length &&
       currentRecipe.ingredients.every((ing) => selectedIngredients.includes(ing));
 
     if (isCorrect) {
+      playSound('success');
       setScore((s) => s + currentRecipe.reward);
       setRecipesCompleted((r) => r + 1);
       setShowSuccess(true);
@@ -101,9 +118,9 @@ export default function CookingMiniGame() {
         setShowSuccess(false);
         setMessage('');
         selectNewRecipe();
-        shuffleIngredients();
       }, 1500);
     } else {
+      playSound('error');
       setMessage('Not quite right... Check the recipe!');
       setSelectedIngredients([]);
       setTimeout(() => setMessage(''), 2000);
@@ -111,6 +128,7 @@ export default function CookingMiniGame() {
   }, [currentRecipe, selectedIngredients, gameOver]);
 
   const handleFinish = () => {
+    playSound('success');
     updateResources({ food: resources.food + score });
 
     // Cooking also heals the party a bit!
@@ -256,6 +274,7 @@ export default function CookingMiniGame() {
           </button>
           <button
             onClick={() => {
+              playSound('click');
               setSelectedIngredients([]);
               shuffleIngredients();
             }}
@@ -289,7 +308,10 @@ export default function CookingMiniGame() {
       {/* Back button */}
       {!gameOver && (
         <button
-          onClick={() => setScreen('travel')}
+          onClick={() => {
+            playSound('click');
+            setScreen('travel');
+          }}
           className="w-full mt-2 py-2 bg-white/10 hover:bg-white/20 text-white/70 rounded text-sm"
         >
           Leave Kitchen

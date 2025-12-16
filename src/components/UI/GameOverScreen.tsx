@@ -1,4 +1,5 @@
 import { useGameStore } from '../../stores/gameStore';
+import { playSound } from '../../services/audio';
 
 export default function GameOverScreen() {
   const { partyMembers, distanceTraveled, resetGame, resources } = useGameStore();
@@ -17,6 +18,7 @@ export default function GameOverScreen() {
   }
 
   const handleTryAgain = () => {
+    playSound('click');
     resetGame();
   };
 
@@ -24,8 +26,8 @@ export default function GameOverScreen() {
     <div className="bg-gradient-to-b from-[#1a1a2e] via-[#2d1a1a] to-[#1a1a2e] rounded-lg p-6 shadow-2xl border-4 border-red-900">
       {/* Tombstone */}
       <div className="text-center mb-6">
-        <div className="text-6xl mb-4">🪦</div>
-        <h1 className="text-2xl text-red-400">
+        <div className="text-5xl md:text-6xl mb-4">🪦</div>
+        <h1 className="text-xl md:text-2xl text-red-400">
           GAME OVER
         </h1>
         <p className="text-white/60 text-sm mt-2">

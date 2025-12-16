@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useGameStore } from '../../stores/gameStore';
+import { playSound } from '../../services/audio';
 
 export default function VictoryScreen() {
   const { playerName, partyMembers, distanceTraveled, day, resetGame, toggleGooglyEyes, googlyEyesMode } = useGameStore();
@@ -25,6 +26,7 @@ export default function VictoryScreen() {
   };
 
   const handlePlayAgain = () => {
+    playSound('click');
     resetGame();
   };
 
@@ -51,12 +53,12 @@ export default function VictoryScreen() {
       )}
 
       {/* Disney Castle */}
-      <div className="text-center mb-6">
-        <div className="text-6xl mb-4 animate-bounce">🏰</div>
-        <h1 className="text-3xl text-magic-gold animate-pulse">
+      <div className="text-center mb-4 md:mb-6">
+        <div className="text-5xl md:text-6xl mb-2 md:mb-4 animate-bounce">🏰</div>
+        <h1 className="text-2xl md:text-3xl text-magic-gold animate-pulse">
           YOU MADE IT!
         </h1>
-        <h2 className="text-xl text-elsa-blue mt-2">
+        <h2 className="text-lg md:text-xl text-elsa-blue mt-2">
           WALT DISNEY WORLD
         </h2>
       </div>

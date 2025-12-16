@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useGameStore } from '../../stores/gameStore';
+import { playSound } from '../../services/audio';
 
 interface Script {
   scene: string;
@@ -175,10 +176,12 @@ export default function TheaterMiniGame() {
 
   const handleEmotionSelect = (emotion: string) => {
     if (!currentScript || gameOver) return;
+    playSound('click');
 
     const isCorrect = currentScript.correctEmotions[currentLineIndex] === emotion;
 
     if (isCorrect) {
+      playSound('success');
       setFeedback('correct');
       setScore((s) => s + 100);
       setSelectedEmotions((prev) => [...prev, emotion]);
@@ -189,6 +192,7 @@ export default function TheaterMiniGame() {
           setCurrentLineIndex((i) => i + 1);
         } else {
           // Scene complete!
+          playSound('levelup');
           setScenesCompleted((s) => s + 1);
           setScore((s) => s + 200); // Bonus for completing scene
 
@@ -208,12 +212,14 @@ export default function TheaterMiniGame() {
         }
       }, 800);
     } else {
+      playSound('error');
       setFeedback('wrong');
       setTimeout(() => setFeedback(null), 500);
     }
   };
 
   const handleFinish = () => {
+    playSound('success');
     // Award morale based on performance
     setScreen('travel');
   };
@@ -363,7 +369,10 @@ export default function TheaterMiniGame() {
       {/* Back button */}
       {!gameOver && (
         <button
-          onClick={() => setScreen('travel')}
+          onClick={() => {
+            playSound('click');
+            setScreen('travel');
+          }}
           className="w-full mt-2 py-2 bg-white/10 hover:bg-white/20 text-white/70 rounded text-sm"
         >
           Exit Stage

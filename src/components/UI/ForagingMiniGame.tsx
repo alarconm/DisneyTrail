@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useGameStore } from '../../stores/gameStore';
+import { playSound } from '../../services/audio';
 
 interface FallingItem {
   id: number;
@@ -67,47 +68,55 @@ export default function ForagingMiniGame() {
     return () => clearInterval(interval);
   }, [gameOver, spawnItem]);
 
-  // Move items down
+  // Move items down and check for catches
   useEffect(() => {
     if (gameOver) return;
 
     const interval = setInterval(() => {
       setItems((prev) => {
-        const updated = prev
-          .map((item) => ({ ...item, y: item.y + item.speed }))
-          .filter((item) => item.y < 100);
+        const caughtItems: FallingItem[] = [];
+        const remaining: FallingItem[] = [];
 
-        // Check for catches
-        updated.forEach((item) => {
-          if (item.y >= 75 && item.y <= 90) {
-            const basketLeft = basketX - 12;
-            const basketRight = basketX + 12;
+        prev.forEach((item) => {
+          const newY = item.y + item.speed;
+
+          // Check if in catch zone
+          if (newY >= 75 && newY <= 90) {
+            const basketLeft = basketX - 15;
+            const basketRight = basketX + 15;
             if (item.x >= basketLeft && item.x <= basketRight) {
-              // Caught!
-              const comboMultiplier = 1 + combo * 0.1;
-              const points = Math.floor(item.points * comboMultiplier);
-              setScore((s) => Math.min(150, s + points));
-              setCombo((c) => Math.min(10, c + 1));
-              setCatchStreak((s) => s + 1);
-
-              if (item.isSpecial) {
-                setMessage('Hakuna Matata! Slimy yet satisfying! 🐗');
-              } else if (catchStreak > 0 && catchStreak % 5 === 0) {
-                setMessage(`${catchStreak} catch streak! x${comboMultiplier.toFixed(1)} bonus!`);
-              }
-
-              // Remove caught item
-              setItems((i) => i.filter((x) => x.id !== item.id));
+              caughtItems.push({ ...item, y: newY });
+              return;
             }
+          }
+
+          if (newY < 100) {
+            remaining.push({ ...item, y: newY });
           }
         });
 
-        return updated;
+        // Process caught items
+        if (caughtItems.length > 0) {
+          caughtItems.forEach((item) => {
+            const comboMultiplier = 1 + combo * 0.1;
+            const points = Math.floor(item.points * comboMultiplier);
+            setScore((s) => Math.min(150, s + points));
+            setCombo((c) => Math.min(10, c + 1));
+            setCatchStreak((s) => s + 1);
+            playSound('coin');
+
+            if (item.isSpecial) {
+              setMessage('Hakuna Matata! Slimy yet satisfying! 🐗');
+            }
+          });
+        }
+
+        return remaining;
       });
     }, 50);
 
     return () => clearInterval(interval);
-  }, [gameOver, basketX, combo, catchStreak]);
+  }, [gameOver, basketX, combo]);
 
   // Reset combo on miss
   useEffect(() => {
@@ -167,6 +176,7 @@ export default function ForagingMiniGame() {
   };
 
   const handleFinish = () => {
+    playSound('success');
     updateResources({ food: resources.food + score });
     setScreen('travel');
   };
@@ -278,7 +288,10 @@ export default function ForagingMiniGame() {
       {/* Back button */}
       {!gameOver && (
         <button
-          onClick={() => setScreen('travel')}
+          onClick={() => {
+            playSound('click');
+            setScreen('travel');
+          }}
           className="w-full py-2 bg-white/10 hover:bg-white/20 text-white/70 rounded text-sm"
         >
           Cancel Foraging

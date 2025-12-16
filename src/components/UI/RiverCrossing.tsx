@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { RiverCrossingOption } from '../../types/game.types';
+import { playSound } from '../../services/audio';
 
 interface CrossingOutcome {
   success: boolean;
@@ -58,6 +59,7 @@ export default function RiverCrossing() {
   ];
 
   const attemptCrossing = (option: RiverCrossingOption) => {
+    playSound('click');
     setSelectedOption(option);
     setIsAnimating(true);
 
@@ -160,11 +162,18 @@ export default function RiverCrossing() {
 
       setOutcome(result);
       setIsAnimating(false);
+      playSound(result.success ? 'success' : 'error');
     }, 2000);
   };
 
   const handleContinue = () => {
+    playSound('click');
     setScreen('travel');
+  };
+
+  const handleGoBack = () => {
+    playSound('click');
+    setScreen('landmark');
   };
 
   if (outcome) {
@@ -276,10 +285,20 @@ export default function RiverCrossing() {
       )}
 
       {/* Current resources */}
-      <div className="flex justify-center gap-4 text-sm text-white/60">
+      <div className="flex justify-center gap-4 text-sm text-white/60 mb-4">
         <span>💰 {resources.goldCoins}</span>
         <span>✨ {resources.pixieDust}</span>
       </div>
+
+      {/* Back button */}
+      {!isAnimating && (
+        <button
+          onClick={handleGoBack}
+          className="w-full py-2 bg-white/10 hover:bg-white/20 text-white/70 rounded text-sm"
+        >
+          ← Go Back
+        </button>
+      )}
     </div>
   );
 }

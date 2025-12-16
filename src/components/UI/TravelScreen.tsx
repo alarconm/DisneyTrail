@@ -427,7 +427,7 @@ export default function TravelScreen() {
             {isMoving ? '⏹️ Stop' : '▶️ Travel'}
           </button>
           <button
-            onClick={() => setScreen('hunting')}
+            onClick={() => { playSound('click'); setScreen('hunting'); }}
             className="py-2 md:py-3 bg-cat-orange hover:bg-orange-600 text-white rounded text-xs md:text-sm transition-colors"
             disabled={isMoving}
           >
@@ -438,7 +438,7 @@ export default function TravelScreen() {
         {/* Activity buttons - Row 1 */}
         <div className="grid grid-cols-4 gap-1 md:gap-2 mb-2">
           <button
-            onClick={() => setScreen('cooking')}
+            onClick={() => { playSound('click'); setScreen('cooking'); }}
             className="py-2 bg-white/10 hover:bg-white/20 text-white/80 rounded text-[10px] md:text-xs transition-colors flex flex-col items-center"
             disabled={isMoving}
           >
@@ -446,7 +446,7 @@ export default function TravelScreen() {
             <span className="hidden md:inline">Cook</span>
           </button>
           <button
-            onClick={() => setScreen('dancing')}
+            onClick={() => { playSound('click'); setScreen('dancing'); }}
             className="py-2 bg-white/10 hover:bg-white/20 text-white/80 rounded text-[10px] md:text-xs transition-colors flex flex-col items-center"
             disabled={isMoving}
           >
@@ -454,7 +454,7 @@ export default function TravelScreen() {
             <span className="hidden md:inline">Dance</span>
           </button>
           <button
-            onClick={() => setScreen('theater')}
+            onClick={() => { playSound('click'); setScreen('theater'); }}
             className="py-2 bg-white/10 hover:bg-white/20 text-white/80 rounded text-[10px] md:text-xs transition-colors flex flex-col items-center"
             disabled={isMoving}
           >
@@ -462,7 +462,7 @@ export default function TravelScreen() {
             <span className="hidden md:inline">Theater</span>
           </button>
           <button
-            onClick={() => setScreen('karaoke')}
+            onClick={() => { playSound('click'); setScreen('karaoke'); }}
             className="py-2 bg-gradient-to-r from-pink-500/30 to-purple-500/30 hover:from-pink-500/50 hover:to-purple-500/50 text-white/80 rounded text-[10px] md:text-xs transition-colors flex flex-col items-center border border-pink-500/30"
             disabled={isMoving}
           >
@@ -474,7 +474,7 @@ export default function TravelScreen() {
         {/* Activity buttons - Row 2 */}
         <div className="grid grid-cols-4 gap-1 md:gap-2">
           <button
-            onClick={() => setScreen('shop')}
+            onClick={() => { playSound('click'); setScreen('shop'); }}
             className="py-2 bg-white/10 hover:bg-white/20 text-white/80 rounded text-[10px] md:text-xs transition-colors flex flex-col items-center"
             disabled={isMoving}
           >
@@ -482,7 +482,7 @@ export default function TravelScreen() {
             <span className="hidden md:inline">Shop</span>
           </button>
           <button
-            onClick={() => setScreen('rest')}
+            onClick={() => { playSound('click'); setScreen('rest'); }}
             className="py-2 bg-gradient-to-r from-blue-500/30 to-indigo-500/30 hover:from-blue-500/50 hover:to-indigo-500/50 text-white/80 rounded text-[10px] md:text-xs transition-colors flex flex-col items-center border border-blue-500/30"
             disabled={isMoving}
           >
@@ -490,7 +490,7 @@ export default function TravelScreen() {
             <span className="hidden md:inline">Camp</span>
           </button>
           <button
-            onClick={() => setScreen('memory-book')}
+            onClick={() => { playSound('click'); setScreen('memory-book'); }}
             className="py-2 bg-gradient-to-r from-amber-500/30 to-orange-500/30 hover:from-amber-500/50 hover:to-orange-500/50 text-white/80 rounded text-[10px] md:text-xs transition-colors flex flex-col items-center border border-amber-500/30"
             disabled={isMoving}
           >
@@ -498,7 +498,7 @@ export default function TravelScreen() {
             <span className="hidden md:inline">Memories</span>
           </button>
           <button
-            onClick={() => setScreen('achievements')}
+            onClick={() => { playSound('click'); setScreen('achievements'); }}
             className="py-2 bg-gradient-to-r from-yellow-500/30 to-amber-500/30 hover:from-yellow-500/50 hover:to-amber-500/50 text-white/80 rounded text-[10px] md:text-xs transition-colors flex flex-col items-center border border-yellow-500/30"
             disabled={isMoving}
           >

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useGameStore } from '../../stores/gameStore';
+import { playSound } from '../../services/audio';
 
 interface Animal {
   id: number;
@@ -56,11 +57,14 @@ export default function HuntingMiniGame() {
       ? SPECIAL_ANIMALS[Math.floor(Math.random() * SPECIAL_ANIMALS.length)]
       : ANIMAL_TYPES[Math.floor(Math.random() * ANIMAL_TYPES.length)];
 
+    // Get game area width dynamically
+    const gameWidth = gameAreaRef.current?.clientWidth || 350;
+
     const newAnimal: Animal = {
       id: Date.now() + Math.random(),
       ...template,
-      x: Math.random() < 0.5 ? -30 : 430, // spawn from left or right
-      y: 50 + Math.random() * 150,
+      x: Math.random() < 0.5 ? -30 : gameWidth + 30, // spawn from left or right
+      y: 30 + Math.random() * 100,
     };
 
     setAnimals((prev) => [...prev, newAnimal]);
@@ -79,13 +83,15 @@ export default function HuntingMiniGame() {
     if (gameOver) return;
 
     const interval = setInterval(() => {
+      const gameWidth = gameAreaRef.current?.clientWidth || 350;
+      const midpoint = gameWidth / 2;
       setAnimals((prev) =>
         prev
           .map((animal) => ({
             ...animal,
-            x: animal.x < 200 ? animal.x + animal.speed : animal.x - animal.speed,
+            x: animal.x < midpoint ? animal.x + animal.speed : animal.x - animal.speed,
           }))
-          .filter((animal) => animal.x > -50 && animal.x < 450)
+          .filter((animal) => animal.x > -50 && animal.x < gameWidth + 50)
       );
     }, 50);
 
@@ -119,6 +125,50 @@ export default function HuntingMiniGame() {
     });
   };
 
+  // Handle touch events for mobile
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!gameAreaRef.current) return;
+    const rect = gameAreaRef.current.getBoundingClientRect();
+    const touch = e.touches[0];
+    setCrosshairPos({
+      x: touch.clientX - rect.left,
+      y: touch.clientY - rect.top,
+    });
+  };
+
+  const handleTouchTap = (e: React.TouchEvent) => {
+    if (!gameAreaRef.current || gameOver) return;
+    const rect = gameAreaRef.current.getBoundingClientRect();
+    const touch = e.changedTouches[0];
+    const tapPos = {
+      x: touch.clientX - rect.left,
+      y: touch.clientY - rect.top,
+    };
+    setCrosshairPos(tapPos);
+    // Shoot at tap position
+    const hitAnimal = animals.find((animal) => {
+      const dx = Math.abs(tapPos.x - animal.x);
+      const dy = Math.abs(tapPos.y - animal.y);
+      return dx < 40 && dy < 40; // Larger hit area for touch
+    });
+
+    if (hitAnimal) {
+      if (hitAnimal.isSpecial) {
+        playSound('error');
+        setMessage(hitAnimal.message || "You can't hunt this one!");
+        setTimeout(() => setMessage(''), 2000);
+      } else {
+        playSound('success');
+        setScore((prev) => Math.min(100, prev + hitAnimal.points));
+        setAnimals((prev) => prev.filter((a) => a.id !== hitAnimal.id));
+        setMessage(`Got a ${hitAnimal.type}! +${hitAnimal.points} food`);
+        setTimeout(() => setMessage(''), 1000);
+      }
+    } else {
+      playSound('click');
+    }
+  };
+
   const handleShoot = () => {
     if (gameOver) return;
 
@@ -131,18 +181,23 @@ export default function HuntingMiniGame() {
 
     if (hitAnimal) {
       if (hitAnimal.isSpecial) {
+        playSound('error');
         setMessage(hitAnimal.message || "You can't hunt this one!");
         setTimeout(() => setMessage(''), 2000);
       } else {
+        playSound('success');
         setScore((prev) => Math.min(100, prev + hitAnimal.points)); // Max 100 lbs carry limit
         setAnimals((prev) => prev.filter((a) => a.id !== hitAnimal.id));
         setMessage(`Got a ${hitAnimal.type}! +${hitAnimal.points} food`);
         setTimeout(() => setMessage(''), 1000);
       }
+    } else {
+      playSound('click');
     }
   };
 
   const handleFinish = () => {
+    playSound('success');
     updateResources({ food: resources.food + score });
     setScreen('travel');
   };
@@ -168,9 +223,11 @@ export default function HuntingMiniGame() {
       {/* Game area */}
       <div
         ref={gameAreaRef}
-        className="relative h-64 bg-gradient-to-b from-[#87CEEB] to-[#228B22] rounded-lg overflow-hidden cursor-crosshair mb-4"
+        className="relative h-48 md:h-64 bg-gradient-to-b from-[#87CEEB] to-[#228B22] rounded-lg overflow-hidden cursor-crosshair mb-4 touch-none"
         onMouseMove={handleMouseMove}
         onClick={handleShoot}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchTap}
       >
         {/* Ground */}
         <div className="absolute bottom-0 left-0 right-0 h-16 bg-[#228B22]" />
@@ -243,7 +300,10 @@ export default function HuntingMiniGame() {
       {/* Back button */}
       {!gameOver && (
         <button
-          onClick={() => setScreen('travel')}
+          onClick={() => {
+            playSound('click');
+            setScreen('travel');
+          }}
           className="w-full py-2 bg-white/10 hover:bg-white/20 text-white/70 rounded text-sm"
         >
           Cancel Hunt

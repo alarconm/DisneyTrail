@@ -1,4 +1,5 @@
 import { useGameStore } from '../../stores/gameStore';
+import { playSound } from '../../services/audio';
 
 export default function EventScreen() {
   const { currentEvent, clearEvent, updateResources, resources, partyMembers, updatePartyMember } = useGameStore();
@@ -9,6 +10,7 @@ export default function EventScreen() {
   }
 
   const handleContinue = () => {
+    playSound('click');
     // Apply event effects
     currentEvent.effects.forEach((effect) => {
       switch (effect.type) {
@@ -80,7 +82,7 @@ export default function EventScreen() {
       {/* Disney character if present */}
       {currentEvent.disneyCharacter && (
         <div className="text-center mb-4">
-          <div className="inline-block text-6xl animate-bounce">
+          <div className="inline-block text-5xl md:text-6xl animate-bounce">
             {currentEvent.disneyCharacter === 'elsa' && '❄️'}
             {currentEvent.disneyCharacter === 'tinkerbell' && '🧚'}
             {currentEvent.disneyCharacter === 'stitch' && '👾'}

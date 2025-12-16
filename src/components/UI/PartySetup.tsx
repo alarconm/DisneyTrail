@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { Profession, PROFESSION_BONUSES } from '../../types/game.types';
+import { playSound } from '../../services/audio';
+import TabbyCat from '../sprites/TabbyCat';
 
 export default function PartySetup() {
   const { startNewGame } = useGameStore();
@@ -8,7 +10,13 @@ export default function PartySetup() {
   const [profession, setProfession] = useState<Profession>('actress');
 
   const handleStart = () => {
+    playSound('success');
     startNewGame(playerName, profession);
+  };
+
+  const handleProfessionSelect = (prof: Profession) => {
+    playSound('click');
+    setProfession(prof);
   };
 
   const professions: Profession[] = [
@@ -47,7 +55,7 @@ export default function PartySetup() {
           {professions.map((prof) => (
             <button
               key={prof}
-              onClick={() => setProfession(prof)}
+              onClick={() => handleProfessionSelect(prof)}
               className={`p-3 rounded border-2 text-left transition-all ${
                 profession === prof
                   ? 'border-magic-gold bg-magic-gold/20 text-magic-gold'
@@ -70,24 +78,24 @@ export default function PartySetup() {
         <h2 className="text-white text-sm mb-3">Your Party:</h2>
         <div className="grid grid-cols-3 gap-4">
           <div className="text-center p-3 bg-white/5 rounded">
-            <div className="w-12 h-12 mx-auto bg-cat-gray rounded-full flex items-center justify-center text-2xl mb-2">
-              🐱
+            <div className="flex justify-center mb-2">
+              <TabbyCat variant="marge" size="md" mood="happy" />
             </div>
-            <p className="text-cat-gray text-xs">Marge</p>
+            <p className="text-white text-xs">Marge</p>
             <p className="text-white/50 text-xs">The Mom</p>
           </div>
           <div className="text-center p-3 bg-white/5 rounded">
-            <div className="w-12 h-12 mx-auto bg-cat-orange rounded-full flex items-center justify-center text-2xl mb-2">
-              🐱
+            <div className="flex justify-center mb-2">
+              <TabbyCat variant="minestrone" size="md" mood="excited" />
             </div>
-            <p className="text-cat-orange text-xs">Minestrone</p>
+            <p className="text-white text-xs">Minestrone</p>
             <p className="text-white/50 text-xs">Troublemaker</p>
           </div>
           <div className="text-center p-3 bg-white/5 rounded">
-            <div className="w-12 h-12 mx-auto bg-cat-yellow rounded-full flex items-center justify-center text-2xl mb-2">
-              🐱
+            <div className="flex justify-center mb-2">
+              <TabbyCat variant="mac" size="md" mood="happy" />
             </div>
-            <p className="text-cat-yellow text-xs">Macaroni</p>
+            <p className="text-white text-xs">Mac</p>
             <p className="text-white/50 text-xs">Big Oaf</p>
           </div>
         </div>
@@ -115,7 +123,10 @@ export default function PartySetup() {
 
       {/* Back button */}
       <button
-        onClick={() => useGameStore.getState().setScreen('main-menu')}
+        onClick={() => {
+          playSound('click');
+          useGameStore.getState().setScreen('main-menu');
+        }}
         className="w-full mt-2 py-2 bg-transparent hover:bg-white/10 text-white/60 rounded-lg text-sm"
       >
         Back to Menu

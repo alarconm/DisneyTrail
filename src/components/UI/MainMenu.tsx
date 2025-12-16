@@ -7,6 +7,7 @@ export default function MainMenu() {
   const { setScreen, isStarted, resetGame, cloudLoadGame, isSaving, cloudError } = useGameStore();
   const [showCats, setShowCats] = useState(false);
   const [showLoadModal, setShowLoadModal] = useState(false);
+  const [showHowToPlay, setShowHowToPlay] = useState(false);
   const [loadName, setLoadName] = useState('');
   const [loadError, setLoadError] = useState('');
 
@@ -125,7 +126,10 @@ export default function MainMenu() {
         )}
 
         <button
-          onClick={() => setShowLoadModal(true)}
+          onClick={() => {
+            playSound('click');
+            setShowLoadModal(true);
+          }}
           className="w-full md:w-56 py-2 md:py-3 bg-elsa-blue/20 hover:bg-elsa-blue/30 text-elsa-blue rounded-lg border-2 border-elsa-blue/30 transition-all text-xs md:text-sm"
         >
           Load Cloud Save
@@ -133,14 +137,20 @@ export default function MainMenu() {
 
         <div className="flex gap-2 w-full md:w-56">
           <button
-            onClick={() => setScreen('party-setup')}
+            onClick={() => {
+              playSound('click');
+              setShowHowToPlay(true);
+            }}
             className="flex-1 py-2 bg-white/10 hover:bg-white/20 text-white/80 rounded-lg text-[8px] md:text-xs"
           >
             How to Play
           </button>
           {isStarted && (
             <button
-              onClick={() => setScreen('achievements')}
+              onClick={() => {
+                playSound('click');
+                setScreen('achievements');
+              }}
               className="flex-1 py-2 bg-white/10 hover:bg-white/20 text-white/80 rounded-lg text-[8px] md:text-xs"
             >
               Achievements
@@ -178,6 +188,7 @@ export default function MainMenu() {
             <div className="flex gap-2">
               <button
                 onClick={() => {
+                  playSound('click');
                   setShowLoadModal(false);
                   setLoadName('');
                   setLoadError('');
@@ -194,6 +205,54 @@ export default function MainMenu() {
                 {isSaving ? 'Loading...' : 'Load'}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* How to Play Modal */}
+      {showHowToPlay && (
+        <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-20 rounded-lg p-4 overflow-y-auto">
+          <div className="bg-[#1a1a2e] border-2 border-magic-gold rounded-lg p-4 mx-2 max-w-sm w-full max-h-[90%] overflow-y-auto">
+            <h3 className="text-lg text-magic-gold mb-3 text-center">How to Play</h3>
+
+            <div className="space-y-3 text-xs text-white/80">
+              <div>
+                <p className="text-magic-gold font-bold">🎯 Goal</p>
+                <p>Travel from Tigard, Oregon to Walt Disney World with your three cats: Marge, Minestrone, and Mac!</p>
+              </div>
+
+              <div>
+                <p className="text-magic-gold font-bold">🛻 Traveling</p>
+                <p>Click "Travel" to move along the trail. Manage your pace and rations to keep everyone healthy.</p>
+              </div>
+
+              <div>
+                <p className="text-magic-gold font-bold">🎮 Mini-Games</p>
+                <p>• 🧺 Forage - Catch falling food<br/>
+                   • 🍳 Cook - Match ingredients<br/>
+                   • 💃 Dance - Hit arrow keys in time<br/>
+                   • 🎭 Theater - Memorize sequences<br/>
+                   • 🎤 Karaoke - Sing along!</p>
+              </div>
+
+              <div>
+                <p className="text-magic-gold font-bold">💡 Tips</p>
+                <p>• Keep your cats fed and healthy<br/>
+                   • Stock up at shops along the way<br/>
+                   • Rest at camp to heal<br/>
+                   • Watch for Disney character events!</p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                playSound('click');
+                setShowHowToPlay(false);
+              }}
+              className="w-full mt-4 py-2 bg-prairie-green hover:bg-green-700 text-white rounded text-sm"
+            >
+              Got it!
+            </button>
           </div>
         </div>
       )}

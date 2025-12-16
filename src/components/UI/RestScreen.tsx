@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import TabbyCat from '../sprites/TabbyCat';
+import { playSound } from '../../services/audio';
 
 const CAMPFIRE_STORIES = [
   "Marge tells the tale of the time she caught a spider the size of a nickel. The others aren't sure if they believe her.",
@@ -32,12 +33,13 @@ export default function RestScreen() {
   const [fireFlicker, setFireFlicker] = useState(false);
 
   // Fire flicker effect
-  useState(() => {
+  useEffect(() => {
     const interval = setInterval(() => setFireFlicker(f => !f), 500);
     return () => clearInterval(interval);
-  });
+  }, []);
 
   const handleRest = () => {
+    playSound('click');
     // Heal all party members slightly
     partyMembers.forEach(member => {
       if (member.isAlive && member.health < member.maxHealth) {
@@ -47,29 +49,35 @@ export default function RestScreen() {
       }
     });
     advanceDay();
+    playSound('success');
     setMessage("Everyone rested well! +15 health for all cats.");
     setTimeout(() => setMessage(''), 3000);
   };
 
   const handleTellStory = () => {
+    playSound('click');
     const story = CAMPFIRE_STORIES[Math.floor(Math.random() * CAMPFIRE_STORIES.length)];
     setCurrentStory(story);
     setActivity('story');
   };
 
   const handleStargaze = () => {
+    playSound('click');
     const constellation = CONSTELLATION_FACTS[Math.floor(Math.random() * CONSTELLATION_FACTS.length)];
     setCurrentConstellation(constellation);
     setActivity('stargaze');
     // Small chance of bonus
     if (Math.random() < 0.3) {
+      playSound('coin');
       updateResources({ pixieDust: resources.pixieDust + 5 });
       setMessage("The stars sprinkle you with magical pixie dust! +5");
     }
   };
 
   const handleHeal = () => {
+    playSound('click');
     if (resources.firstAidKits <= 0) {
+      playSound('error');
       setMessage("No first aid kits available!");
       setTimeout(() => setMessage(''), 3000);
       return;
@@ -82,6 +90,7 @@ export default function RestScreen() {
       return;
     }
 
+    playSound('success');
     updateResources({ firstAidKits: resources.firstAidKits - 1 });
     updatePartyMember(injuredCat.id, { health: Math.min(100, injuredCat.health + 40) });
     setMessage(`Used first aid kit on ${injuredCat.name}! +40 health`);
@@ -89,8 +98,10 @@ export default function RestScreen() {
   };
 
   const handleRepair = () => {
+    playSound('click');
     // Check if we have parts to repair
     if (resources.wagonWheels <= 1 && resources.wagonAxles <= 0) {
+      playSound('error');
       setMessage("No spare parts to use for repairs!");
       setTimeout(() => setMessage(''), 3000);
       return;
@@ -101,7 +112,7 @@ export default function RestScreen() {
   };
 
   return (
-    <div className="bg-gradient-to-b from-[#0a0a20] via-[#0f1a35] to-[#0a0a15] rounded-lg p-4 md:p-6 shadow-2xl border-4 border-amber-900 relative overflow-hidden min-h-[500px]">
+    <div className="bg-gradient-to-b from-[#0a0a20] via-[#0f1a35] to-[#0a0a15] rounded-lg p-3 md:p-6 shadow-2xl border-4 border-amber-900 relative overflow-hidden">
       {/* Stars background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(50)].map((_, i) => (
@@ -123,14 +134,14 @@ export default function RestScreen() {
       {/* Moon */}
       <div className="absolute top-4 right-4 text-4xl opacity-80">🌙</div>
 
-      {/* Campfire */}
-      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 text-center">
-        <div className={`text-5xl transition-transform ${fireFlicker ? 'scale-105' : 'scale-100'}`}>
-          🔥
+      {/* Campfire - positioned in flow on mobile, absolute on desktop */}
+      <div className="flex justify-center mb-4 md:absolute md:bottom-20 md:left-1/2 md:-translate-x-1/2 text-center relative z-10">
+        <div>
+          <div className={`text-4xl md:text-5xl transition-transform ${fireFlicker ? 'scale-105' : 'scale-100'}`}>
+            🔥
+          </div>
+          <div className="text-2xl md:text-3xl -mt-2">🪵</div>
         </div>
-        <div className="text-3xl -mt-2">🪵</div>
-        {/* Fire glow */}
-        <div className="absolute -inset-10 bg-orange-500/20 rounded-full blur-2xl -z-10" />
       </div>
 
       {/* Header */}
@@ -140,21 +151,21 @@ export default function RestScreen() {
       </div>
 
       {/* Cats around campfire */}
-      <div className="flex justify-center gap-8 mb-8 relative z-10">
+      <div className="flex justify-center gap-4 md:gap-8 mb-6 md:mb-8 relative z-10">
         <div className="text-center">
-          <TabbyCat variant="marge" size="md" mood="happy" />
-          <p className="text-xs text-white/60 mt-1">Marge</p>
-          <p className="text-xs text-amber-400">{partyMembers.find(m => m.id === 'marge')?.health}%</p>
+          <TabbyCat variant="marge" size="sm" mood="happy" />
+          <p className="text-[10px] md:text-xs text-white/60 mt-1">Marge</p>
+          <p className="text-[10px] md:text-xs text-amber-400">{partyMembers.find(m => m.id === 'marge')?.health}%</p>
         </div>
         <div className="text-center">
-          <TabbyCat variant="mac" size="md" mood="sleeping" />
-          <p className="text-xs text-white/60 mt-1">Mac</p>
-          <p className="text-xs text-amber-400">{partyMembers.find(m => m.id === 'mac')?.health}%</p>
+          <TabbyCat variant="mac" size="sm" mood="sleeping" />
+          <p className="text-[10px] md:text-xs text-white/60 mt-1">Mac</p>
+          <p className="text-[10px] md:text-xs text-amber-400">{partyMembers.find(m => m.id === 'mac')?.health}%</p>
         </div>
         <div className="text-center">
-          <TabbyCat variant="minestrone" size="md" mood="excited" />
-          <p className="text-xs text-white/60 mt-1">Minestrone</p>
-          <p className="text-xs text-amber-400">{partyMembers.find(m => m.id === 'minestrone')?.health}%</p>
+          <TabbyCat variant="minestrone" size="sm" mood="excited" />
+          <p className="text-[10px] md:text-xs text-white/60 mt-1">Minestrone</p>
+          <p className="text-[10px] md:text-xs text-amber-400">{partyMembers.find(m => m.id === 'minestrone')?.health}%</p>
         </div>
       </div>
 
@@ -214,7 +225,10 @@ export default function RestScreen() {
           </button>
 
           <button
-            onClick={() => setScreen('travel')}
+            onClick={() => {
+              playSound('click');
+              setScreen('travel');
+            }}
             className="p-4 bg-trail-brown/50 hover:bg-trail-brown/70 rounded-lg border border-amber-500/30 transition-all"
           >
             <span className="text-2xl block mb-1">🌅</span>

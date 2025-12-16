@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { LANDMARKS } from '../../data/landmarks';
 import { ACHIEVEMENTS, ACHIEVEMENT_CATEGORIES, Achievement } from '../../data/achievements';
+import { playSound } from '../../services/audio';
 
 export default function AchievementsScreen() {
   const { setScreen, distanceTraveled, currentLandmarkIndex, partyMembers, googlyEyesMode, day } = useGameStore();
@@ -74,7 +75,10 @@ export default function AchievementsScreen() {
       {/* Category filters */}
       <div className="flex flex-wrap justify-center gap-2 mb-4">
         <button
-          onClick={() => setSelectedCategory('all')}
+          onClick={() => {
+            playSound('click');
+            setSelectedCategory('all');
+          }}
           className={`px-3 py-1 rounded-full text-xs transition-all ${
             selectedCategory === 'all'
               ? 'bg-magic-gold text-black'
@@ -89,7 +93,10 @@ export default function AchievementsScreen() {
           return (
             <button
               key={key}
-              onClick={() => setSelectedCategory(key as Achievement['category'])}
+              onClick={() => {
+                playSound('click');
+                setSelectedCategory(key as Achievement['category']);
+              }}
               className={`px-3 py-1 rounded-full text-xs transition-all ${
                 selectedCategory === key
                   ? 'bg-magic-gold text-black'
@@ -168,7 +175,10 @@ export default function AchievementsScreen() {
 
       {/* Back button */}
       <button
-        onClick={() => setScreen('travel')}
+        onClick={() => {
+          playSound('click');
+          setScreen('travel');
+        }}
         className="w-full py-3 bg-trail-brown hover:bg-amber-800 text-white rounded-lg transition-colors"
       >
         Back to Trail

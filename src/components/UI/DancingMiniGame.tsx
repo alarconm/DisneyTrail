@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useGameStore } from '../../stores/gameStore';
+import { playSound } from '../../services/audio';
 
 type Direction = '⬆️' | '⬇️' | '⬅️' | '➡️';
 
@@ -95,6 +96,7 @@ export default function DancingMiniGame() {
         const points = isPerfect ? 100 : 50;
         const comboMultiplier = 1 + combo * 0.1;
 
+        playSound(isPerfect ? 'success' : 'coin');
         setScore((s) => s + Math.floor(points * comboMultiplier));
         setCombo((c) => {
           const newCombo = c + 1;
@@ -106,11 +108,13 @@ export default function DancingMiniGame() {
 
         // Change dance partner on combos
         if ((combo + 1) % 5 === 0) {
+          playSound('levelup');
           const partners = ['🐱', '🐭', '👸', '🧚', '🦊', '🐻', '🐰'];
           setDancePartner(partners[Math.floor(Math.random() * partners.length)]);
         }
       } else {
         // Miss!
+        playSound('error');
         setCombo(0);
         setFeedback('miss');
       }
@@ -135,6 +139,7 @@ export default function DancingMiniGame() {
   }, [handleKeyPress]);
 
   const handleFinish = () => {
+    playSound('success');
     // Award morale based on performance (score / 100) * 5
     setScreen('travel');
   };
@@ -279,7 +284,10 @@ export default function DancingMiniGame() {
       {/* Back button */}
       {!gameOver && (
         <button
-          onClick={() => setScreen('travel')}
+          onClick={() => {
+            playSound('click');
+            setScreen('travel');
+          }}
           className="w-full mt-4 py-2 bg-white/10 hover:bg-white/20 text-white/70 rounded text-sm"
         >
           Leave Dance Floor
