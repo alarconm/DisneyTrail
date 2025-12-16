@@ -17,6 +17,7 @@ import {
   DEFAULT_ACHIEVEMENT_STATS,
 } from '../types/game.types';
 import { saveToCloud, loadFromCloud, CloudSaveState } from '../services/cloudSave';
+import { LANDMARKS } from '../data/landmarks';
 
 interface GameActions {
   // Navigation
@@ -79,7 +80,7 @@ const initialState: GameState = {
   resources: { ...DEFAULT_RESOURCES },
   currentLandmarkIndex: 0,
   distanceTraveled: 0,
-  distanceToNextLandmark: 450, // First leg to Crater Lake
+  distanceToNextLandmark: LANDMARKS[1]?.distanceFromStart || 100, // Distance to first landmark
   pace: 'steady',
   rations: 'filling',
   weather: 'sunny',
@@ -225,15 +226,22 @@ export const useGameStore = create<GameState & GameActions>()(
         const state = get();
         const newIndex = state.currentLandmarkIndex + 1;
 
-        // Check if we've won!
-        if (newIndex >= 10) {
+        // Check if we've won! (reached the last landmark - Disney World)
+        if (newIndex >= LANDMARKS.length - 1) {
           set({ currentScreen: 'victory', currentLandmarkIndex: newIndex });
           return;
         }
 
+        // Calculate distance to the next landmark after this one
+        const nextLandmark = LANDMARKS[newIndex + 1];
+        const newDistanceToNextLandmark = nextLandmark
+          ? nextLandmark.distanceFromStart - state.distanceTraveled
+          : 0;
+
         set({
           currentLandmarkIndex: newIndex,
           currentScreen: 'landmark',
+          distanceToNextLandmark: Math.max(0, newDistanceToNextLandmark),
         });
       },
 

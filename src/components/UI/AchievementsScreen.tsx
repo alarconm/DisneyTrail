@@ -15,19 +15,19 @@ export default function AchievementsScreen() {
   // Calculate which achievements are unlocked based on game state
   const getUnlockedStatus = (achievement: Achievement): boolean => {
     switch (achievement.id) {
-      // Journey achievements
+      // Journey achievements (updated for 4,200 mile trip)
       case 'first-steps':
         return distanceTraveled > 0;
       case 'oregon-explorer':
-        return distanceTraveled >= 300;
+        return distanceTraveled >= 650; // Boise, Idaho
       case 'mountain-climber':
-        return distanceTraveled >= 1300;
+        return distanceTraveled >= 1550; // Denver, Colorado
       case 'halfway-there':
-        return distanceTraveled >= 1600;
+        return distanceTraveled >= 2100; // About halfway
       case 'southern-hospitality':
-        return distanceTraveled >= 2350;
+        return distanceTraveled >= 3000; // Memphis, Tennessee
       case 'florida-bound':
-        return distanceTraveled >= 3000;
+        return distanceTraveled >= 3900; // Jacksonville, Florida
       case 'disney-dreamer':
         return hasCompletedGame;
       case 'cross-country':

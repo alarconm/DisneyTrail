@@ -22,13 +22,22 @@ export default function EventScreen() {
 
     // Track special event achievements
     switch (currentEvent.id) {
+      // Minestrone mischief events
       case 'minestrone-food-raid':
       case 'minestrone-zoomies':
+      case 'minestrone-escape':
+      case 'minestrone-trouble':
+      case 'minestrone-sass':
+      case 'minestrone-midnight':
         incrementAchievementStat('minestroneEventsCount');
         break;
+      // Mac breaking things events
       case 'mac-wheel':
       case 'mac-ate-map':
       case 'mac-nap-spot':
+      case 'mac-got-out':
+      case 'mac-stuck':
+      case 'mac-demands':
         incrementAchievementStat('macBreaksCount');
         break;
       case 'mtg-booster':
