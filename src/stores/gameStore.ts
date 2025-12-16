@@ -54,6 +54,7 @@ interface GameActions {
   // Game state
   pauseGame: () => void;
   resumeGame: () => void;
+  updateMorale: (amount: number) => void;
 
   // Achievement tracking
   updateAchievementStats: (updates: Partial<AchievementStats>) => void;
@@ -140,6 +141,7 @@ export const useGameStore = create<GameState & GameActions>()(
 
       consumeDailyResources: () => {
         const state = get();
+        const aliveCats = state.partyMembers.filter((m) => m.type === 'cat' && m.isAlive);
         const aliveMembers = state.partyMembers.filter((m) => m.isAlive).length;
 
         // Food consumption based on rations
@@ -151,23 +153,63 @@ export const useGameStore = create<GameState & GameActions>()(
         const dailyFood = aliveMembers * foodPerPerson[state.rations];
 
         // Cat treats - cats need their treats!
-        const catCount = state.partyMembers.filter(
-          (m) => m.type === 'cat' && m.isAlive
-        ).length;
-        const dailyTreats = catCount > 0 ? 1 : 0;
+        const dailyTreats = aliveCats.length > 0 ? 1 : 0;
+        const actualTreatsGiven = Math.min(dailyTreats, state.resources.catTreats);
 
         const newFood = Math.max(0, state.resources.food - dailyFood);
+        const newTreats = Math.max(0, state.resources.catTreats - dailyTreats);
 
         // Track if food ever runs out
         const ranOutOfFood = newFood === 0 ? true : state.achievementStats.ranOutOfFood;
+
+        // Track treats given for achievement
+        const newTreatsGiven = state.achievementStats.treatsGiven + actualTreatsGiven;
+
+        // Apply consequences for running out of resources
+        let healthPenalty = 0;
+        let moralePenalty = 0;
+
+        // Starvation damage when out of food
+        if (newFood === 0) {
+          healthPenalty = -5; // Lose 5 health per day when starving
+          moralePenalty = -10;
+        }
+
+        // Cats get unhappy without treats
+        if (newTreats === 0 && aliveCats.length > 0) {
+          moralePenalty -= 5; // Additional morale loss
+          healthPenalty -= 2; // Cats lose a bit of health without treats
+        }
+
+        // Apply health penalties to all alive members
+        if (healthPenalty !== 0) {
+          aliveCats.forEach((cat) => {
+            const newHealth = Math.max(0, cat.health + healthPenalty);
+            get().updatePartyMember(cat.id, {
+              health: newHealth,
+              isAlive: newHealth > 0,
+            });
+          });
+        }
+
+        // Apply morale penalty
+        if (moralePenalty !== 0) {
+          set((state) => ({
+            morale: Math.max(0, state.morale + moralePenalty),
+          }));
+        }
 
         set((state) => ({
           resources: {
             ...state.resources,
             food: newFood,
-            catTreats: Math.max(0, state.resources.catTreats - dailyTreats),
+            catTreats: newTreats,
           },
-          achievementStats: { ...state.achievementStats, ranOutOfFood },
+          achievementStats: {
+            ...state.achievementStats,
+            ranOutOfFood,
+            treatsGiven: newTreatsGiven,
+          },
         }));
       },
 
@@ -267,6 +309,11 @@ export const useGameStore = create<GameState & GameActions>()(
       pauseGame: () => set({ isPaused: true }),
 
       resumeGame: () => set({ isPaused: false }),
+
+      updateMorale: (amount) =>
+        set((state) => ({
+          morale: Math.min(100, Math.max(0, state.morale + amount)),
+        })),
 
       // Achievement tracking methods
       updateAchievementStats: (updates) =>

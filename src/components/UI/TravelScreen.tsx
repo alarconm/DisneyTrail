@@ -31,7 +31,7 @@ export default function TravelScreen() {
     day, month, year,
     distanceTraveled, distanceToNextLandmark,
     currentLandmarkIndex,
-    resources, partyMembers,
+    resources, partyMembers, morale,
     pace, rations, weather,
     setPace, setRations, setWeather,
     advanceDay, travel, consumeDailyResources, triggerEvent,
@@ -427,6 +427,26 @@ export default function TravelScreen() {
                 <p className="text-[8px] md:text-[10px] text-white/50 mt-0.5">{member.name}</p>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Morale indicator */}
+        <div className="mb-3 md:mb-4 px-2">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[10px] md:text-xs text-white/60">Morale:</span>
+            <span className={`text-[10px] md:text-xs ${
+              morale > 70 ? 'text-green-400' : morale > 40 ? 'text-yellow-400' : 'text-red-400'
+            }`}>
+              {morale > 70 ? '😊 High' : morale > 40 ? '😐 Medium' : '😢 Low'}
+            </span>
+          </div>
+          <div className="h-2 bg-white/20 rounded-full overflow-hidden">
+            <div
+              className={`h-full transition-all ${
+                morale > 70 ? 'bg-green-500' : morale > 40 ? 'bg-yellow-500' : 'bg-red-500'
+              }`}
+              style={{ width: `${morale}%` }}
+            />
           </div>
         </div>
 

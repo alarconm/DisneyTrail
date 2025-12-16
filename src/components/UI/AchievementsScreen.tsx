@@ -103,7 +103,9 @@ export default function AchievementsScreen() {
       case 'memory-keeper':
         return currentLandmarkIndex >= LANDMARKS.length - 1; // Visited all landmarks
       case 'completionist':
-        return false; // Would need to check all other achievements
+        // Check if all other achievements (except completionist and perfect-journey) are unlocked
+        const otherAchievements = ACHIEVEMENTS.filter(a => a.id !== 'completionist' && a.id !== 'perfect-journey');
+        return otherAchievements.every(a => getUnlockedStatus(a));
       case 'perfect-journey':
         return hasCompletedGame &&
           partyMembers.filter(m => m.type === 'cat' && m.isAlive).length === 3 &&

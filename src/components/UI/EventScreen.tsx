@@ -4,7 +4,7 @@ import { playSound } from '../../services/audio';
 export default function EventScreen() {
   const {
     currentEvent, clearEvent, updateResources, resources, partyMembers, updatePartyMember,
-    addDisneyCharacterMet, incrementAchievementStat, updateAchievementStats
+    addDisneyCharacterMet, incrementAchievementStat, updateAchievementStats, advanceDay, updateMorale
   } = useGameStore();
 
   if (!currentEvent) {
@@ -70,6 +70,7 @@ export default function EventScreen() {
           break;
         case 'health':
           if (effect.target === 'all') {
+            // Apply to all party members
             partyMembers.forEach((member) => {
               if (member.isAlive) {
                 updatePartyMember(member.id, {
@@ -77,13 +78,27 @@ export default function EventScreen() {
                 });
               }
             });
+          } else if (effect.target) {
+            // Apply to specific cat by name (e.g., 'Mac', 'Marge', 'Minestrone')
+            const targetMember = partyMembers.find(
+              (m) => m.name.toLowerCase() === effect.target?.toLowerCase() || m.id === effect.target?.toLowerCase()
+            );
+            if (targetMember && targetMember.isAlive) {
+              updatePartyMember(targetMember.id, {
+                health: Math.min(100, Math.max(0, targetMember.health + effect.amount)),
+              });
+            }
           }
           break;
         case 'morale':
-          // Morale effects would be handled here
+          // Apply morale changes
+          updateMorale(effect.amount);
           break;
         case 'time':
-          // Time loss would advance days
+          // Time loss advances days (positive = days lost)
+          for (let i = 0; i < Math.abs(effect.amount); i++) {
+            advanceDay();
+          }
           break;
       }
     });
